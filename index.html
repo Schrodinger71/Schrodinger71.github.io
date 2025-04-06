@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Минимал сайт</title>
+  <style>
+    :root {
+      --bg-color: #000;
+      --panel-bg: rgba(0, 0, 0, 0.6);
+      --hover-bg: rgba(255, 255, 255, 0.1);
+      --text-color: #fff;
+      --accent: #e74c3c;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body, html {
+      height: 100%;
+      background-color: var(--bg-color);
+      overflow: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('./assets/media/helltaker.gif') center center / contain no-repeat;
+      z-index: 0;
+    }
+
+    .top-panel {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: var(--panel-bg);
+      display: flex;
+      justify-content: center;
+      padding: 10px 0;
+      z-index: 1;
+    }
+
+    .menu {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .menu-item {
+      position: relative;
+      color: var(--text-color);
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .menu-item:hover {
+      background: var(--hover-bg);
+      border-radius: 4px;
+    }
+
+    .menu-item:hover .dropdown {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translate(-50%, 10px);
+      background: var(--panel-bg);
+      color: var(--text-color);
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      min-width: 200px;
+      text-align: center;
+    }
+
+    .dropdown a {
+      display: block;
+      color: var(--accent);
+      text-decoration: none;
+      margin-top: 5px;
+      transition: 0.2s;
+    }
+
+    .dropdown a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-panel">
+    <div class="menu">
+      <div class="menu-item">
+        Обо мне
+        <div class="dropdown">
+          <p>Меня зовут Шрёдька. Я создаю сайты.</p>
+        </div>
+      </div>
+      <div class="menu-item">
+        Проекты
+        <div class="dropdown">
+          <p>Мои лучшие работы.</p>
+          <a href="#">Сайт 1</a>
+          <a href="#">Сайт 2</a>
+          <a href="#">GitHub</a>
+        </div>
+      </div>
+      <div class="menu-item">
+        Контакты
+        <div class="dropdown">
+          <p>Свяжись со мной:</p>
+          <a href="mailto:youremail@example.com">Email</a>
+          <a href="https://t.me/yourusername" target="_blank">Telegram</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
