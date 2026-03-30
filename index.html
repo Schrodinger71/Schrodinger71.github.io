@@ -583,13 +583,14 @@
     <div class="section">
       <h2 class="section-title">Активность • Последний год</h2>
       <div class="contrib-graph">
-        <div id="graph-grid" class="graph-grid"></div>
-        <p style="text-align: center; margin-top: 18px; opacity: 0.75; font-size: 1rem;">
-          421+ вклад • Самый жаркий месяц — Адский Декабрь 🔥
+        <img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=schrodinger71&theme=github_dark" 
+             style="width: 100%; border-radius: 16px; box-shadow: 0 0 30px rgba(231, 76, 60, 0.3);" 
+             alt="GitHub contribution graph">
+        <p style="text-align: center; margin-top: 16px; opacity: 0.75;">
+          📊 Данные напрямую с GitHub • Коммиты, PR, ревью
         </p>
       </div>
     </div>
-
   </div>
 
   <!-- МОДАЛКА -->
@@ -782,14 +783,14 @@
         setTimeout(() => n.remove(), 2400);
       });
     }
-
+    
     // ====================== ЗАПУСК ======================
     window.onload = () => {
       resizeCanvas();
       window.addEventListener('resize', resizeCanvas);
       type();
       animateParticles();
-      createContributionGraph();
+      // createContributionGraph();
       animateSkills();
       console.log('%c✅ Сайт schrodinger71 полностью обновлён под реальный GitHub-профиль! Helltaker + JS красота на максимуме.', 'color:#e74c3c;font-size:24px;font-weight:900;');
     };
