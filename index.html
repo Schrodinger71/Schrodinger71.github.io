@@ -27,18 +27,6 @@
       overflow-x: hidden;
       color: var(--text-color);
     }
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url('./assets/media/helltaker.gif') center center / cover no-repeat;
-      filter: brightness(0.55) contrast(1.15) saturate(1.2);
-      z-index: -2;
-      pointer-events: none;
-    }
     #hell-canvas {
       position: fixed;
       top: 0;
@@ -510,9 +498,8 @@
         </p>
 
         <div style="margin-top: 55px; display: flex; justify-content: center; gap: 20px;">
-          <button onclick="triggerHellMode()" 
-                  style="background: var(--accent); color: #fff; border: none; padding: 18px 48px; font-size: 1.35rem; border-radius: 50px; cursor: pointer; box-shadow: 0 0 35px var(--glow); transition: 0.4s; position: relative; overflow: hidden;">
-            🔥 АКТИВИРОВАТЬ АД (JS DEMO)
+          <button onclick="triggerHellMode()" style="background: var(--accent); color: #fff; border: none; padding: 18px 48px; font-size: 1.35rem; border-radius: 50px; cursor: pointer; box-shadow: 0 0 35px var(--glow); transition: 0.4s; position: relative; z-index: 100;">
+              🔥 АКТИВИРОВАТЬ АД (JS DEMO)
           </button>
           <div id="status-badge" style="background: rgba(231,76,60,0.2); border: 2px solid var(--accent); color: var(--accent); padding: 12px 28px; border-radius: 50px; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; animation: flameFlicker 1.5s infinite;">
             <span>👾 DEMONIC STATUS:</span> 
@@ -817,7 +804,7 @@
       const bodyEl = document.getElementById('modal-body');
       if (project === 'git-sec-monitor') {
         titleEl.textContent = '🔥 git-sec-monitor';
-        bodyEl.innerHTML = `<p>Мониторинг уязвимостей Git-репозиториев. Полная защита кода от демонов.</p><p><strong>Язык:</strong> Python • Обновлено: 3 часа назад</p>`;
+        bodyEl.innerHTML = `<p>Мониторинг уязвимостей Git-репозиториев. Полная защита кода от демонов.</p><p><strong>Язык:</strong> Python</p>`;
       } else if (project === 'university-schedule-bot') {
         titleEl.textContent = '📅 university-schedule-bot';
         bodyEl.innerHTML = `<p>Discord-бот для расписания университета. Автоматизация уведомлений и команд.</p><p><strong>Язык:</strong> Python • Bot Architect</p>`;
@@ -836,25 +823,20 @@
     }
 
     function triggerHellMode() {
-      const avatar = document.getElementById('avatar');
-      avatar.style.transitionDuration = '0.8s';
-      avatar.style.transform = 'scale(1.9) rotate(1080deg)';
-
-      const flash = document.createElement('div');
-      flash.style.cssText = `position:fixed;inset:0;background:rgba(231,76,60,0.75);z-index:99999;pointer-events:none;transition:opacity 1.6s;`;
-      document.body.appendChild(flash);
-      document.body.style.animation = 'shakeHell 0.6s';
-      setTimeout(() => { flash.style.opacity = '0'; document.body.style.animation = ''; }, 120);
-      setTimeout(() => { flash.remove(); avatar.style.transform = ''; }, 1800);
-
-      for (let i = 0; i < 100; i++) {
-        const p = new Particle();
-        p.alpha = 1;
-        p.speedY = Math.random() * 9 + 4;
-        p.speedX = (Math.random() - 0.5) * 6;
-        particles.push(p);
-      }
-      console.log('%c🔥 HELL MODE ACTIVATED — МАКСИМАЛЬНЫЙ АД!', 'color:#e74c3c;font-size:22px;font-weight:900;');
+          const avatar = document.getElementById('avatar');
+          avatar.style.transitionDuration = '0.8s';
+          avatar.style.transform = 'scale(1.9) rotate(1080deg)';
+          const flash = document.createElement('div');
+          flash.style.cssText = `position:fixed;inset:0;background:rgba(231,76,60,0.75);z-index:99999;pointer-events:none;transition:opacity 1.6s;`;
+          document.body.appendChild(flash);
+          document.body.style.animation = 'shakeHell 0.6s';
+          setTimeout(() => { flash.style.opacity = '0'; document.body.style.animation = ''; }, 120);
+          setTimeout(() => { flash.remove(); avatar.style.transform = ''; }, 1800);
+          for (let i = 0; i < 140; i++) {
+            const p = new Particle();
+            p.alpha = 1; p.speedY = Math.random()*9+4; p.speedX = (Math.random()-0.5)*6;
+            particles.push(p);
+          }
     }
 
     function discordCopy() {
@@ -875,7 +857,6 @@
       animateParticles();
       animateOnScroll();
       animateSkills();
-
       console.log('%c✅ Сайт schrodinger71! Helltaker + JS красота на максимуме 🔥', 'color:#e74c3c;font-size:24px;font-weight:900;');
     };
   </script>
