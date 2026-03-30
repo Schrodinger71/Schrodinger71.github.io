@@ -48,6 +48,30 @@
       opacity: 0.45;
     }
 
+    /* === НОВЫЕ АНИМАЦИИ === */
+    @keyframes flameFlicker {
+      0%, 100% { text-shadow: 0 0 12px var(--glow); }
+      50% { text-shadow: 0 0 28px var(--glow), 0 0 40px #ff4444; }
+    }
+    @keyframes badgePop {
+      0% { opacity: 0; transform: scale(0.6) rotate(-12deg); }
+      60% { transform: scale(1.2) rotate(8deg); }
+      100% { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+    @keyframes riseFromHell {
+      0% { opacity: 0; transform: translateY(80px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scanline {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(300%); }
+    }
+    @keyframes shakeHell {
+      0%, 100% { transform: translate(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translate(-4px, 2px); }
+      20%, 40%, 60%, 80% { transform: translate(4px, -2px); }
+    }
+
     .top-panel {
       position: fixed;
       top: 0;
@@ -148,6 +172,21 @@
       background: linear-gradient(transparent, var(--bg-color));
       z-index: 1;
     }
+    /* НОВАЯ: сканирующая линия в герое */
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(transparent, rgba(231, 76, 60, 0.15), transparent);
+      z-index: 2;
+      pointer-events: none;
+      animation: scanline 6s linear infinite;
+      opacity: 0.15;
+    }
+
     .avatar-container {
       position: relative;
       margin: 0 auto 35px;
@@ -163,9 +202,7 @@
       align-items: center;
       justify-content: center;
       font-size: 120px;
-      box-shadow: 
-        0 0 70px 25px var(--glow),
-        inset 0 0 45px rgba(255,255,255,0.35);
+      box-shadow: 0 0 70px 25px var(--glow), inset 0 0 45px rgba(255,255,255,0.35);
       border: 9px solid #fff;
       transition: all 0.7s ease;
       animation: pulse-glow 3.5s infinite alternate ease-in-out;
@@ -180,6 +217,7 @@
       text-shadow: 0 0 45px var(--glow), 0 0 90px var(--accent);
       margin-bottom: 12px;
       letter-spacing: -3px;
+      animation: flameFlicker 1.8s infinite;
     }
     .hero .title {
       font-size: 1.95rem;
@@ -202,12 +240,21 @@
       max-width: 1300px;
       border-radius: 22px;
       box-shadow: 0 0 45px rgba(231, 76, 60, 0.35);
+      opacity: 0;
+      transform: translateY(80px);
+      transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .section.visible {
+      opacity: 1;
+      transform: translateY(0);
+      animation: riseFromHell 1.2s ease forwards;
     }
     .section-title {
       font-size: 2.9rem;
       margin-bottom: 45px;
       text-align: center;
       position: relative;
+      animation: flameFlicker 2s infinite;
     }
     .section-title::after {
       content: "";
@@ -235,8 +282,8 @@
       transition: 0.4s;
     }
     .stats-container img:hover {
-      transform: scale(1.03);
-      box-shadow: 0 0 40px var(--glow);
+      transform: scale(1.05) rotate(2deg);
+      box-shadow: 0 0 50px var(--glow);
     }
 
     /* Навыки */
@@ -259,6 +306,7 @@
       background: #222;
       border-radius: 9999px;
       overflow: hidden;
+      position: relative;
     }
     .bar-fill {
       height: 100%;
@@ -266,9 +314,24 @@
       width: 0;
       transition: width 2.2s cubic-bezier(0.34, 1.56, 0.64, 1);
       box-shadow: 0 0 18px var(--glow);
+      position: relative;
+    }
+    .bar-fill::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: lavaFlow 2.5s linear infinite;
+    }
+    @keyframes lavaFlow {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(300%); }
     }
 
-    /* Технологии (бейджи в аду) */
+    /* Технологии */
     .tech-grid {
       display: flex;
       flex-wrap: wrap;
@@ -278,10 +341,14 @@
     .tech-badge {
       transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
       filter: drop-shadow(0 0 12px var(--glow));
+      opacity: 0;
+    }
+    .tech-badge.visible {
+      animation: badgePop 0.8s forwards;
     }
     .tech-badge:hover {
-      transform: scale(1.15) rotate(8deg);
-      filter: drop-shadow(0 0 25px var(--glow));
+      transform: scale(1.18) rotate(12deg);
+      filter: drop-shadow(0 0 32px var(--glow));
     }
 
     /* Карточки репозиториев */
@@ -298,6 +365,11 @@
       border: 1px solid transparent;
       position: relative;
       overflow: hidden;
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    .repo-card.visible {
+      animation: riseFromHell 0.9s forwards;
     }
     .repo-card::before {
       content: "";
@@ -315,6 +387,7 @@
       transform: translateY(-15px);
       border-color: var(--accent);
       box-shadow: 0 25px 45px rgba(231, 76, 60, 0.45);
+      /* animation: flameFlicker 0.1s infinite; */
     }
     .repo-card:hover::before {
       opacity: 1;
@@ -342,25 +415,14 @@
       padding: 32px;
       border-radius: 18px;
       overflow: hidden;
+      position: relative;
     }
-    .graph-grid {
-      display: grid;
-      grid-template-columns: repeat(53, 1fr);
-      gap: 3px;
-      height: 190px;
+    .contrib-graph img {
+      transition: all 0.6s ease;
     }
-    .graph-square {
-      background: #222;
-      transition: all 0.3s ease;
-      border-radius: 3px;
-    }
-    .graph-square.active {
-      background: #e74c3c;
-      box-shadow: 0 0 12px #e74c3c;
-    }
-    .graph-square.intense {
-      background: #ff2222;
-      box-shadow: 0 0 22px #ff2222;
+    .contrib-graph:hover img {
+      transform: scale(1.03);
+      filter: brightness(1.15) contrast(1.1);
     }
 
     .footer {
@@ -371,15 +433,12 @@
       border-top: 3px solid var(--accent);
     }
     .glow-text {
-      animation: text-glow 3s infinite alternate;
+      animation: flameFlicker 2.5s infinite alternate;
     }
+
     @keyframes pulse-glow {
       from { box-shadow: 0 0 65px 25px var(--glow); }
       to { box-shadow: 0 0 110px 45px var(--glow); }
-    }
-    @keyframes text-glow {
-      from { text-shadow: 0 0 25px var(--glow); }
-      to { text-shadow: 0 0 50px var(--glow), 0 0 85px var(--accent); }
     }
   </style>
 </head>
@@ -418,7 +477,6 @@
         Контакты
         <div class="dropdown">
           <p>Свяжись со мной в аду:</p>
-          <!-- <a href="mailto:youremail@example.com">✉️ Email</a> -->
           <a href="https://t.me/schrodinger714" target="_blank">📱 Telegram</a>
           <a href="#" onclick="discordCopy()">💬 Discord: schrodinger71</a>
         </div>
@@ -427,7 +485,6 @@
   </div>
 
   <div class="content">
-
     <!-- HERO -->
     <section class="hero">
       <div>
@@ -443,11 +500,17 @@
           IT Security Specialist 🛡️ • Bot Architect &amp; Operator 🤖<br>
           Docker Enthusiast 🐳 • DevOps Builder 🏗️ • Russia, Tula
         </p>
-        <div style="margin-top: 55px;">
+
+        <div style="margin-top: 55px; display: flex; justify-content: center; gap: 20px;">
           <button onclick="triggerHellMode()" 
-                  style="background: var(--accent); color: #fff; border: none; padding: 18px 48px; font-size: 1.35rem; border-radius: 50px; cursor: pointer; box-shadow: 0 0 35px var(--glow); transition: 0.4s;">
+                  style="background: var(--accent); color: #fff; border: none; padding: 18px 48px; font-size: 1.35rem; border-radius: 50px; cursor: pointer; box-shadow: 0 0 35px var(--glow); transition: 0.4s; position: relative; overflow: hidden;">
             🔥 АКТИВИРОВАТЬ АД (JS DEMO)
           </button>
+          <div id="status-badge" style="background: rgba(231,76,60,0.2); border: 2px solid var(--accent); color: var(--accent); padding: 12px 28px; border-radius: 50px; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; animation: flameFlicker 1.5s infinite;">
+            <span>👾 DEMONIC STATUS:</span> 
+            <span id="live-dot" style="display: inline-block; width: 12px; height: 12px; background: #0f0; border-radius: 50%; box-shadow: 0 0 15px #0f0; animation: livePulse 1.2s infinite;"></span> 
+            ONLINE IN HELL
+          </div>
         </div>
 
         <div style="margin-top: 85px; font-size: 1.05rem; opacity: 0.7;">
@@ -473,57 +536,42 @@
         <img src="https://github-readme-stats-sigma-five.vercel.app/api/top-langs/?username=Schrodinger71&amp;theme=dracula&amp;layout=compact&amp;hide_border=true&amp;bg_color=00000000" alt="Top Languages" style="max-width: 480px;">
         <img src="https://github-readme-stats-sigma-five.vercel.app/api?username=schrodinger71&amp;count_private=true&amp;show_icons=true&amp;theme=dracula&amp;hide_border=true&amp;bg_color=00000000" alt="GitHub Stats" style="max-width: 480px;">
       </div>
-      <p style="text-align: center; margin-top: 20px; opacity: 0.75; font-size: 1.1rem;">
-        <!-- 🐍 GitHub Snake (contrib) — можно добавить локально как assets/github-snake.svg -->
-      </p>
     </div>
 
     <!-- ТЕХНОЛОГИИ -->
     <div class="section">
       <h2 class="section-title">Технологии &amp; Инструменты</h2>
-      <div class="tech-grid">
-        <!-- === Languages === -->
-        <img class="tech-badge" src="https://img.shields.io/badge/C++-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white" />
-        <img class="tech-badge" src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white" />
-        <img class="tech-badge" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
-        <img class="tech-badge" src="https://img.shields.io/badge/Go-3776AB?style=for-the-badge&logo=go&logoColor=white" />
-
-        <!-- === Frameworks / IDE === -->
-        <img class="tech-badge" src="https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white" />
-        <img class="tech-badge" src="https://img.shields.io/badge/VS_Code-007ACC?style=for-the-badge&logo=visual-studio-code&logoColor=white" />
-        <img class="tech-badge" src="https://img.shields.io/badge/Rider-CB161E?style=for-the-badge&logo=rider&logoColor=white" />
-
-        <!-- === Databases === -->
-        <img class="tech-badge" src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" />
-        <img class="tech-badge" src="https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white" />
-
-        <!-- === DevOps & Infrastructure === -->
-        <img class="tech-badge" src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
-        <img class="tech-badge" src="https://img.shields.io/badge/Docker_Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
-        <img class="tech-badge" src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white" />
-        <img class="tech-badge" src="https://img.shields.io/badge/Portainer.io-2010FF?style=for-the-badge&logo=portainer&logoColor=white" />
-
-        <!-- === Discord Development === -->
-        <img class="tech-badge" src="https://img.shields.io/badge/Discord_API-5865F2?style=for-the-badge&logo=discord&logoColor=white" />
-
-        <!-- === Tools & OS === -->
-        <img class="tech-badge" src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white" />
-        <img class="tech-badge" src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" />
-        <img class="tech-badge" src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black" />
-        <img class="tech-badge" src="https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white" />
-        <img class="tech-badge" src="https://img.shields.io/badge/Kali_Linux-557C94?style=for-the-badge&logo=kalilinux&logoColor=white" />
-        <img class="tech-badge" src="https://img.shields.io/badge/Windows_10-0078D6?style=for-the-badge&logo=windows&logoColor=white" />
-
-        <!-- === Formats === -->
-        <img class="tech-badge" src="https://img.shields.io/badge/JSON-000000?style=for-the-badge&logo=json&logoColor=white" />
-        <img class="tech-badge" src="https://img.shields.io/badge/YAML-CB171E?style=for-the-badge&logo=yaml&logoColor=white" />
+      <div class="tech-grid" id="tech-grid">
+        <!-- все бейджи ниже -->
+        <img class="tech-badge" src="https://img.shields.io/badge/C++-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white" alt="C++">
+        <img class="tech-badge" src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white" alt="C#">
+        <img class="tech-badge" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
+        <img class="tech-badge" src="https://img.shields.io/badge/Go-3776AB?style=for-the-badge&logo=go&logoColor=white" alt="Go">
+        <img class="tech-badge" src="https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white" alt=".NET">
+        <img class="tech-badge" src="https://img.shields.io/badge/VS_Code-007ACC?style=for-the-badge&logo=visual-studio-code&logoColor=white" alt="VS Code">
+        <img class="tech-badge" src="https://img.shields.io/badge/Rider-CB161E?style=for-the-badge&logo=rider&logoColor=white" alt="Rider">
+        <img class="tech-badge" src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL">
+        <img class="tech-badge" src="https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite">
+        <img class="tech-badge" src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker">
+        <img class="tech-badge" src="https://img.shields.io/badge/Docker_Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Compose">
+        <img class="tech-badge" src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white" alt="GitHub Actions">
+        <img class="tech-badge" src="https://img.shields.io/badge/Portainer.io-2010FF?style=for-the-badge&logo=portainer&logoColor=white" alt="Portainer">
+        <img class="tech-badge" src="https://img.shields.io/badge/Discord_API-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord API">
+        <img class="tech-badge" src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white" alt="Git">
+        <img class="tech-badge" src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
+        <img class="tech-badge" src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black" alt="Linux">
+        <img class="tech-badge" src="https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white" alt="Ubuntu">
+        <img class="tech-badge" src="https://img.shields.io/badge/Kali_Linux-557C94?style=for-the-badge&logo=kalilinux&logoColor=white" alt="Kali Linux">
+        <img class="tech-badge" src="https://img.shields.io/badge/Windows_10-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Windows">
+        <img class="tech-badge" src="https://img.shields.io/badge/JSON-000000?style=for-the-badge&logo=json&logoColor=white" alt="JSON">
+        <img class="tech-badge" src="https://img.shields.io/badge/YAML-CB171E?style=for-the-badge&logo=yaml&logoColor=white" alt="YAML">
       </div>
     </div>
 
-    <!-- ПИННЕД РЕПО  -->
+    <!-- ПИННЕД РЕПО -->
     <div class="section">
       <h2 class="section-title">Пиннед проекты</h2>
-      <div class="projects-grid">
+      <div class="projects-grid" id="projects-grid">
         <div class="repo-card" onclick="showModal('git-sec-monitor')">
           <div class="repo-name">🔥 git-sec-monitor</div>
           <div class="repo-desc">Мониторинг безопасности Git-репозиториев. Написан на Python. Обновлён 3 часа назад.</div>
@@ -539,20 +587,10 @@
           <div class="repo-desc">API-сервис управления товарами. Высокопроизводительный Go-бэкенд.</div>
           <div class="repo-lang">🐹 Go • DevOps</div>
         </div>
-        <!-- <div class="repo-card" onclick="showModal('go-product-api')">
-          <div class="repo-name">🌀 go-product-api</div>
-          <div class="repo-desc">API-сервис управления товарами. Высокопроизводительный Go-бэкенд.</div>
-          <div class="repo-lang">🐹 Go • DevOps</div>
-        </div>
-        <div class="repo-card" onclick="showModal('go-product-api')">
-          <div class="repo-name">🌀 go-product-api</div>
-          <div class="repo-desc">API-сервис управления товарами. Высокопроизводительный Go-бэкенд.</div>
-          <div class="repo-lang">🐹 Go • DevOps</div>
-        </div> -->
       </div>
     </div>
 
-    <!-- НАВЫКИ (прогресс-бары) -->
+    <!-- НАВЫКИ -->
     <div class="section">
       <h2 class="section-title">Адский стек навыков</h2>
       <div class="skills">
@@ -579,13 +617,12 @@
       </div>
     </div>
 
-    <!-- ГРАФИК ВКЛАДА -->
+    <!-- ГРАФИК -->
     <div class="section">
       <h2 class="section-title">Активность • Последний год</h2>
       <div class="contrib-graph">
         <img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=schrodinger71&theme=github_dark" 
-             style="width: 100%; border-radius: 16px; box-shadow: 0 0 30px rgba(231, 76, 60, 0.3);" 
-             alt="GitHub contribution graph">
+             style="width: 100%; border-radius: 16px; box-shadow: 0 0 30px rgba(231, 76, 60, 0.3);" alt="GitHub contribution graph">
         <p style="text-align: center; margin-top: 16px; opacity: 0.75;">
           📊 Данные напрямую с GitHub • Коммиты, PR, ревью
         </p>
@@ -611,7 +648,7 @@
   <div class="footer">
     <p>© schrodinger71 • Built with pure Hell &amp; beautiful JS • 2026</p>
     <p style="margin-top: 12px; font-size: 0.95rem; opacity: 0.65;">
-      Демонстрация красоты JavaScript: canvas-частицы, typing-эффект, анимированный GitHub-график, Hell Mode и многое другое 🔥
+      🔥 Теперь ещё больше анимаций: сканирующая линия, мерцающий огонь, всплывающие бейджи, лавовые прогресс-бары, rise-from-hell, Hell Mode с тряской и многое другое!
     </p>
   </div>
 
@@ -629,7 +666,6 @@
     let phraseIndex = 0;
     let charIndex = 0;
     let isDeleting = false;
-
     function type() {
       const current = phrases[phraseIndex];
       if (isDeleting) {
@@ -640,39 +676,39 @@
         charIndex++;
       }
       if (!isDeleting && charIndex === current.length) {
-        setTimeout(() => isDeleting = true, 2000);
+        setTimeout(() => isDeleting = true, 2200);
       } else if (isDeleting && charIndex === 0) {
         isDeleting = false;
         phraseIndex = (phraseIndex + 1) % phrases.length;
       }
-      setTimeout(type, isDeleting ? 55 : 85);
+      setTimeout(type, isDeleting ? 45 : 75);
     }
 
-    // ====================== АД ЧАСТИЦЫ ======================
     const canvas = document.getElementById('hell-canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
     const symbols = ['🔥', '🖤', '👾', '💢', '♨️', '⚡', '🔐', '🐳', '🛡️'];
-
     class Particle {
-      constructor() {
-        this.reset();
-      }
+      constructor() { this.reset(); }
       reset() {
         this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 22 + 10;
-        this.speedY = Math.random() * 1 + 0.2;
+        this.y = Math.random() * canvas.height * 0.6;
+        this.size = Math.random() * 26 + 12;
+        this.speedY = Math.random() * 1.8 + 0.1;
+        this.speedX = (Math.random() - 0.5) * 1.2;
         this.symbol = symbols[Math.floor(Math.random() * symbols.length)];
-        this.alpha = 1;
+        this.alpha = Math.random() * 0.9 + 0.2;
         this.rotation = Math.random() * 360;
-        this.rotSpeed = (Math.random() - 0.5) * 2;
+        this.rotSpeed = (Math.random() - 0.5) * 5;
+        this.life = Math.random() * 180 + 120;
       }
       update() {
+        this.x += this.speedX;
         this.y += this.speedY;
         this.rotation += this.rotSpeed;
-        this.alpha -= 0.004;
-        if (this.alpha <= 0 || this.y > canvas.height + 50) this.reset();
+        this.alpha -= 0.006;
+        this.life--;
+        if (this.alpha <= 0 || this.life <= 0 || this.y > canvas.height) this.reset();
       }
       draw() {
         ctx.save();
@@ -684,115 +720,115 @@
         ctx.restore();
       }
     }
-
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     }
-
     function animateParticles() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach(p => { p.update(); p.draw(); });
-      if (particles.length < 140) particles.push(new Particle());
+      if (particles.length < 180) particles.push(new Particle()); // ещё больше частиц
       requestAnimationFrame(animateParticles);
     }
 
-    // ====================== ГРАФИК ======================
-    function createContributionGraph() {
-      const grid = document.getElementById('graph-grid');
-      grid.innerHTML = '';
-      for (let i = 0; i < 371; i++) {
-        const sq = document.createElement('div');
-        sq.className = 'graph-square';
-        const r = Math.random();
-        if (r > 0.82) sq.classList.add('intense');
-        else if (r > 0.4) sq.classList.add('active');
-        grid.appendChild(sq);
-      }
-      setTimeout(() => {
-        document.querySelectorAll('.graph-square').forEach((sq, i) => {
-          setTimeout(() => {
-            sq.style.transform = 'scale(1.35)';
-            setTimeout(() => sq.style.transform = 'scale(1)', 160);
-          }, i * 1.8);
+    function animateOnScroll() {
+      const sections = document.querySelectorAll('.section');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
         });
-      }, 600);
-    }
+      }, { threshold: 0.15 });
+      sections.forEach(section => observer.observe(section));
 
-    // ====================== ПРОГРЕСС ======================
-    function animateSkills() {
-      document.querySelectorAll('.bar-fill').forEach(bar => {
-        const w = bar.getAttribute('data-width');
-        setTimeout(() => bar.style.width = w + '%', 700);
+      // Стайджер для tech badges
+      const badges = document.querySelectorAll('.tech-badge');
+      badges.forEach((badge, i) => {
+        setTimeout(() => badge.classList.add('visible'), 300 + i * 28);
+      });
+
+      // Стайджер для repo cards
+      const cards = document.querySelectorAll('.repo-card');
+      cards.forEach((card, i) => {
+        setTimeout(() => card.classList.add('visible'), 800 + i * 140);
       });
     }
 
-    // ====================== МОДАЛКИ (реальные проекты) ======================
+    function animateSkills() {
+      document.querySelectorAll('.bar-fill').forEach(bar => {
+        const w = bar.getAttribute('data-width');
+        setTimeout(() => bar.style.width = w + '%', 900);
+      });
+    }
+
     function showModal(project) {
       const modal = document.getElementById('modal');
       const titleEl = document.getElementById('modal-title');
       const bodyEl = document.getElementById('modal-body');
-
       if (project === 'git-sec-monitor') {
         titleEl.textContent = '🔥 git-sec-monitor';
-        bodyEl.innerHTML = `<p>Мониторинг уязвимостей Git-репозиториев. Полная защита кода от демонов.</p>
-                            <p><strong>Язык:</strong> Python • Обновлено: 3 часа назад</p>`;
+        bodyEl.innerHTML = `<p>Мониторинг уязвимостей Git-репозиториев. Полная защита кода от демонов.</p><p><strong>Язык:</strong> Python • Обновлено: 3 часа назад</p>`;
       } else if (project === 'university-schedule-bot') {
         titleEl.textContent = '📅 university-schedule-bot';
-        bodyEl.innerHTML = `<p>Discord-бот для расписания университета. Автоматизация уведомлений и команд.</p>
-                            <p><strong>Язык:</strong> Python • Bot Architect</p>`;
+        bodyEl.innerHTML = `<p>Discord-бот для расписания университета. Автоматизация уведомлений и команд.</p><p><strong>Язык:</strong> Python • Bot Architect</p>`;
       } else if (project === 'go-product-api') {
         titleEl.textContent = '🌀 go-product-api';
-        bodyEl.innerHTML = `<p>Высокопроизводительный API для управления товарами.</p>
-                            <p><strong>Язык:</strong> Go • DevOps</p>`;
+        bodyEl.innerHTML = `<p>Высокопроизводительный API для управления товарами.</p><p><strong>Язык:</strong> Go • DevOps</p>`;
       }
       modal.style.display = 'flex';
+      // лёгкая тряска модалки при открытии
+      const modalContent = modal.querySelector('div');
+      modalContent.style.animation = 'shakeHell 0.4s';
+      setTimeout(() => modalContent.style.animation = '', 500);
     }
-
     function hideModal() {
       document.getElementById('modal').style.display = 'none';
     }
 
-    // ====================== HELL MODE ======================
     function triggerHellMode() {
       const avatar = document.getElementById('avatar');
-      avatar.style.transitionDuration = '0.7s';
-      avatar.style.transform = 'scale(1.7) rotate(720deg)';
+      avatar.style.transitionDuration = '0.8s';
+      avatar.style.transform = 'scale(1.9) rotate(1080deg)';
 
       const flash = document.createElement('div');
-      flash.style.cssText = `position:fixed;inset:0;background:rgba(231,76,60,0.65);z-index:99999;pointer-events:none;transition:opacity 1.4s;`;
+      flash.style.cssText = `position:fixed;inset:0;background:rgba(231,76,60,0.75);z-index:99999;pointer-events:none;transition:opacity 1.6s;`;
       document.body.appendChild(flash);
-      setTimeout(() => flash.style.opacity = '0', 80);
-      setTimeout(() => { flash.remove(); avatar.style.transform = ''; }, 1600);
+      document.body.style.animation = 'shakeHell 0.6s';
+      setTimeout(() => { flash.style.opacity = '0'; document.body.style.animation = ''; }, 120);
+      setTimeout(() => { flash.remove(); avatar.style.transform = ''; }, 1800);
 
-      for (let i = 0; i < 90; i++) {
+      for (let i = 0; i < 100; i++) {
         const p = new Particle();
         p.alpha = 1;
-        p.speedY = 7;
+        p.speedY = Math.random() * 9 + 4;
+        p.speedX = (Math.random() - 0.5) * 6;
         particles.push(p);
       }
-      console.log('%c🔥 HELL MODE ACTIVATED — JS на максимуме!', 'color:#e74c3c;font-size:20px;font-weight:900;');
+      console.log('%c🔥 HELL MODE ACTIVATED — МАКСИМАЛЬНЫЙ АД!', 'color:#e74c3c;font-size:22px;font-weight:900;');
     }
 
     function discordCopy() {
       navigator.clipboard.writeText('schrodinger71').then(() => {
         const n = document.createElement('div');
         n.textContent = '✅ schrodinger71 скопирован!';
-        n.style.cssText = `position:fixed;bottom:40px;left:50%;transform:translateX(-50%);background:#e74c3c;color:#fff;padding:16px 34px;border-radius:50px;box-shadow:0 0 35px #e74c3c;z-index:99999;`;
+        n.style.cssText = `position:fixed;bottom:40px;left:50%;transform:translateX(-50%);background:#e74c3c;color:#fff;padding:16px 34px;border-radius:50px;box-shadow:0 0 35px #e74c3c;z-index:99999;animation:flameFlicker 1s infinite;`;
         document.body.appendChild(n);
-        setTimeout(() => n.remove(), 2400);
+        setTimeout(() => n.remove(), 2600);
       });
     }
-    
-    // ====================== ЗАПУСК ======================
+
+    // ====================== ЗАПУСК ВСЕГО ======================
     window.onload = () => {
       resizeCanvas();
       window.addEventListener('resize', resizeCanvas);
       type();
       animateParticles();
-      // createContributionGraph();
+      animateOnScroll();
       animateSkills();
-      console.log('%c✅ Сайт schrodinger71 полностью обновлён под реальный GitHub-профиль! Helltaker + JS красота на максимуме.', 'color:#e74c3c;font-size:24px;font-weight:900;');
+
+      console.log('%c✅ Сайт schrodinger71! Helltaker + JS красота на максимуме 🔥', 'color:#e74c3c;font-size:24px;font-weight:900;');
     };
   </script>
 </body>
