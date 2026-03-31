@@ -13,10 +13,26 @@ let isDeleting = false;
 
 // Canvas particles
 const canvas = document.getElementById('hell-canvas');
-const ctx = canvas.getContext('2d');
+const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
 let particles = [];
 const MAX_PARTICLES = 65;
 const symbols = ['🔥', '🖤', '👾', '💢', '♨️', '⚡', '🛡️'];
+
+const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                 window.innerWidth <= 768;
+
+if (isMobile) {
+  MAX_PARTICLES = 22;           // сильно уменьшаем на телефонах
+  ctx.imageSmoothingEnabled = false;
+}
+
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    resizeCanvas();
+  }, 150);
+});
 
 // Мобильное меню
 const menuToggle = document.getElementById('menuToggle');
@@ -46,36 +62,57 @@ function type() {
 class Particle {
   constructor() { this.reset(); }
   reset() {
-    this.font = `${this.size}px system-ui`;
     this.x = Math.random() * canvas.width;
-    this.y = Math.random() * canvas.height * 0.6;
-    this.size = Math.random() * 26 + 12;
-    this.speedY = Math.random() * 1.8 + 0.1;
-    this.speedX = (Math.random() - 0.5) * 1.2;
+    this.y = Math.random() * canvas.height * 0.7;
+    this.size = Math.random() * 22 + 14;
+    this.speedY = Math.random() * 1.4 + 0.2;
+    this.speedX = (Math.random() - 0.5) * 1;
     this.symbol = symbols[Math.floor(Math.random() * symbols.length)];
-    this.alpha = Math.random() * 0.9 + 0.2;
+    this.alpha = Math.random() * 0.85 + 0.25;
     this.rotation = Math.random() * 360;
-    this.rotSpeed = (Math.random() - 0.5) * 5;
-    this.life = Math.random() * 180 + 120;
+    this.rotSpeed = (Math.random() - 0.5) * 3.5; // уменьшил скорость вращения
+    this.life = Math.random() * 160 + 100;
+    this.font = `${this.size}px system-ui`; // кэшируем шрифт!
   }
   update() {
     this.x += this.speedX;
     this.y += this.speedY;
     this.rotation += this.rotSpeed;
-    this.alpha -= 0.006;
+    this.alpha -= 0.0075;
     this.life--;
     if (this.alpha <= 0 || this.life <= 0 || this.y > canvas.height) this.reset();
   }
   draw() {
     ctx.save();
-    ctx.font = this.font;
     ctx.globalAlpha = this.alpha;
     ctx.translate(this.x, this.y);
     ctx.rotate(this.rotation * Math.PI / 180);
-    ctx.font = `${this.size}px system-ui`;
+    ctx.font = this.font;           // используем закешированный шрифт
     ctx.fillText(this.symbol, 0, 0);
     ctx.restore();
   }
+}
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  for (let i = 0; i < particles.length; i++) {
+    const p = particles[i];
+    p.update();
+    p.draw();
+  }
+  
+  // Добавляем частицы с учётом лимита
+  while (particles.length < MAX_PARTICLES) {
+    particles.push(new Particle());
+  }
+  
+  requestAnimationFrame(animateParticles);
 }
 
 function resizeCanvas() {

@@ -31,6 +31,9 @@ body, html {
   z-index: 1;
   pointer-events: none;
   opacity: 0.45;
+  will-change: transform;        /* подсказка браузеру */
+  transform: translateZ(0);      /* включает hardware acceleration */
+  image-rendering: crisp-edges;  /* чуть быстрее */
 }
 
 /* === АНИМАЦИИ === */
