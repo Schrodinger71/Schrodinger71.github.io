@@ -130,8 +130,8 @@ const menuItems = document.querySelectorAll('.menu-item');
     await printLine("", false);
     
     // Серия демо-команд
-    await executeDemoCommand("whoami", ["schrodinger"]);
-    await executeDemoCommand("date", [new Date().toString()]);
+    // await executeDemoCommand("whoami", ["schrodinger"]);
+    // await executeDemoCommand("date", [new Date().toString()]);
     await executeDemoCommand("ls -la", [
       "total 42",
       "drwxr-xr-x 1 schrodinger hell 4096 Apr  1 12:34 .",
@@ -147,20 +147,20 @@ const menuItems = document.querySelectorAll('.menu-item');
       "Telegram: @schrodinger714 | GitHub: @Schrodinger71"
     ]);
     
-    await executeDemoCommand("skills", [
-      "Python        98% ████████████████████",
-      "C++ / C#      94% ██████████████████  ",
-      "Go + DevOps   92% █████████████████   ",
-      "Docker & Sec  95% ██████████████████  ",
-      "Bot Arch      97% ███████████████████ "
-    ]);
+    // await executeDemoCommand("skills", [
+    //   "Python        98% ████████████████████",
+    //   "C++ / C#      94% ██████████████████  ",
+    //   "Go + DevOps   92% █████████████████   ",
+    //   "Docker & Sec  95% ██████████████████  ",
+    //   "Bot Arch      97% ███████████████████ "
+    // ]);
     
-    // Крутая команда matrix — отображает "дождь" из символов
-    await executeDemoCommand("matrix", [
-      "01001110 01101001 01100011 01100101 00100001",
-      "00110010 00110000 00110010 00110110 00100000",
-      "01101000 01100101 01101100 01101100 00100001"
-    ]);
+    // // Крутая команда matrix — отображает "дождь" из символов
+    // await executeDemoCommand("matrix", [
+    //   "01001110 01101001 01100011 01100101 00100001",
+    //   "00110010 00110000 00110010 00110110 00100000",
+    //   "01101000 01100101 01101100 01101100 00100001"
+    // ]);
     
     // Шутливая команда hack
     await executeDemoCommand("hack", [
