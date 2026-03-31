@@ -15,7 +15,8 @@ let isDeleting = false;
 const canvas = document.getElementById('hell-canvas');
 const ctx = canvas.getContext('2d');
 let particles = [];
-const symbols = ['🔥', '🖤', '👾', '💢', '♨️', '⚡', '🔐', '🐳', '🛡️'];
+const MAX_PARTICLES = 65;
+const symbols = ['🔥', '🖤', '👾', '💢', '♨️', '⚡', '🛡️'];
 
 // Мобильное меню
 const menuToggle = document.getElementById('menuToggle');
@@ -45,6 +46,7 @@ function type() {
 class Particle {
   constructor() { this.reset(); }
   reset() {
+    this.font = `${this.size}px system-ui`;
     this.x = Math.random() * canvas.width;
     this.y = Math.random() * canvas.height * 0.6;
     this.size = Math.random() * 26 + 12;
@@ -66,6 +68,7 @@ class Particle {
   }
   draw() {
     ctx.save();
+    ctx.font = this.font;
     ctx.globalAlpha = this.alpha;
     ctx.translate(this.x, this.y);
     ctx.rotate(this.rotation * Math.PI / 180);
@@ -83,7 +86,7 @@ function resizeCanvas() {
 function animateParticles() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   particles.forEach(p => { p.update(); p.draw(); });
-  if (particles.length < 180) particles.push(new Particle());
+  if (particles.length < MAX_PARTICLES) particles.push(new Particle());
   requestAnimationFrame(animateParticles);
 }
 
