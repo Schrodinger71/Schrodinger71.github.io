@@ -197,6 +197,10 @@ function hideModal() {
 
 // ========== HELL MODE (АКТИВАЦИЯ АДА) ==========
 function triggerHellMode() {
+  if (isMobile) {
+      MAX_PARTICLES = 35; // временно чуть больше, но не 140
+    }
+
   const avatar = document.getElementById('avatar');
   avatar.style.transitionDuration = '0.8s';
   avatar.style.transform = 'scale(1.9) rotate(1080deg)';
