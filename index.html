@@ -2,488 +2,69 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>schrodinger71 • CEO Hell</title>
   <link rel="icon" type="image/png" sizes="32x32" href="assets/media/helltakerlucifer-smile.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/media/helltakerlucifer-smile.png">
-  <style>
-    :root {
-      --bg-color: #000;
-      --panel-bg: rgba(0, 0, 0, 0.78);
-      --hover-bg: rgba(231, 76, 60, 0.25);
-      --text-color: #fff;
-      --accent: #e74c3c;
-      --glow: #e74c3c;
-    }
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', system-ui, sans-serif;
-    }
-    body, html {
-      height: 100%;
-      background-color: var(--bg-color);
-      overflow-x: hidden;
-      color: var(--text-color);
-    }
-    #hell-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-      pointer-events: none;
-      opacity: 0.45;
-    }
-
-    /* === НОВЫЕ АНИМАЦИИ === */
-    @keyframes flameFlicker {
-      0%, 100% { text-shadow: 0 0 12px var(--glow); }
-      50% { text-shadow: 0 0 28px var(--glow), 0 0 40px #ff4444; }
-    }
-    @keyframes badgePop {
-      0% { opacity: 0; transform: scale(0.6) rotate(-12deg); }
-      60% { transform: scale(1.2) rotate(8deg); }
-      100% { opacity: 1; transform: scale(1) rotate(0deg); }
-    }
-    @keyframes riseFromHell {
-      0% { opacity: 0; transform: translateY(80px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes scanline {
-      0% { transform: translateY(-100%); }
-      100% { transform: translateY(300%); }
-    }
-    @keyframes shakeHell {
-      0%, 100% { transform: translate(0); }
-      10%, 30%, 50%, 70%, 90% { transform: translate(-4px, 2px); }
-      20%, 40%, 60%, 80% { transform: translate(4px, -2px); }
-    }
-
-    .top-panel {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background: var(--panel-bg);
-      backdrop-filter: blur(14px);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 14px 0;
-      z-index: 1000;
-      border-bottom: 3px solid var(--accent);
-      box-shadow: 0 0 25px var(--glow);
-    }
-    .menu {
-      display: flex;
-      gap: 2.8rem;
-    }
-    .menu-item {
-      position: relative;
-      color: var(--text-color);
-      padding: 9px 20px;
-      cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      font-size: 1.15rem;
-    }
-    .menu-item:hover {
-      background: var(--hover-bg);
-      border-radius: 8px;
-      transform: translateY(-3px);
-      box-shadow: 0 0 20px var(--glow);
-    }
-    .menu-item:hover .dropdown {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-    .dropdown {
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      transform: translate(-50%, 15px);
-      background: var(--panel-bg);
-      backdrop-filter: blur(14px);
-      color: var(--text-color);
-      padding: 20px 28px;
-      border-radius: 14px;
-      box-shadow: 0 12px 35px rgba(231, 76, 60, 0.45);
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-      min-width: 280px;
-      text-align: center;
-      border: 2px solid var(--accent);
-    }
-    .dropdown p {
-      margin-bottom: 14px;
-      font-size: 1.05rem;
-      opacity: 0.95;
-    }
-    .dropdown a {
-      display: block;
-      color: var(--accent);
-      text-decoration: none;
-      padding: 9px 0;
-      transition: 0.3s;
-    }
-    .dropdown a:hover {
-      color: #fff;
-      text-shadow: 0 0 12px var(--glow);
-    }
-
-    .content {
-      position: relative;
-      z-index: 10;
-      padding-top: 95px;
-    }
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 45%;
-      background: linear-gradient(transparent, var(--bg-color));
-      z-index: 1;
-    }
-    /* НОВАЯ: сканирующая линия в герое */
-    .hero::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(transparent, rgba(231, 76, 60, 0.15), transparent);
-      z-index: 2;
-      pointer-events: none;
-      animation: scanline 6s linear infinite;
-      opacity: 0.15;
-    }
-
-    .avatar-container {
-      position: relative;
-      margin: 0 auto 35px;
-      width: 240px;
-      height: 240px;
-    }
-    .avatar {
-      width: 240px;
-      height: 240px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #e74c3c, #9b2222);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 120px;
-      box-shadow: 0 0 70px 25px var(--glow), inset 0 0 45px rgba(255,255,255,0.35);
-      border: 9px solid #fff;
-      transition: all 0.7s ease;
-      animation: pulse-glow 3.5s infinite alternate ease-in-out;
-    }
-    .avatar:hover {
-      transform: scale(1.12) rotate(12deg);
-      box-shadow: 0 0 90px 35px var(--glow);
-    }
-    .hero h1 {
-      font-size: 4.8rem;
-      font-weight: 900;
-      text-shadow: 0 0 45px var(--glow), 0 0 90px var(--accent);
-      margin-bottom: 12px;
-      letter-spacing: -3px;
-      animation: flameFlicker 1.8s infinite;
-    }
-    .hero .title {
-      font-size: 1.95rem;
-      color: var(--accent);
-      margin-bottom: 22px;
-      text-shadow: 0 0 25px var(--glow);
-    }
-    .typing {
-      font-size: 1.45rem;
-      height: 42px;
-      color: #fff;
-      opacity: 0.92;
-    }
-
-    .section {
-      padding: 110px 8%;
-      background: rgba(0, 0, 0, 0.78);
-      backdrop-filter: blur(12px);
-      margin: 45px auto;
-      max-width: 1300px;
-      border-radius: 22px;
-      box-shadow: 0 0 45px rgba(231, 76, 60, 0.35);
-      opacity: 0;
-      transform: translateY(80px);
-      transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
-    }
-    .section.visible {
-      opacity: 1;
-      transform: translateY(0);
-      animation: riseFromHell 1.2s ease forwards;
-    }
-    .section-title {
-      font-size: 2.9rem;
-      margin-bottom: 45px;
-      text-align: center;
-      position: relative;
-      animation: flameFlicker 2s infinite;
-    }
-    .section-title::after {
-      content: "";
-      position: absolute;
-      bottom: -12px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 140px;
-      height: 5px;
-      background: var(--accent);
-      box-shadow: 0 0 18px var(--glow);
-    }
-
-    /* GitHub Stats */
-    .stats-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 30px;
-      margin: 40px 0;
-    }
-    .stats-container img {
-      border-radius: 16px;
-      box-shadow: 0 0 30px rgba(231, 76, 60, 0.3);
-      transition: 0.4s;
-    }
-    .stats-container img:hover {
-      transform: scale(1.05) rotate(2deg);
-      box-shadow: 0 0 50px var(--glow);
-    }
-
-    /* Навыки */
-    .skills {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 32px;
-    }
-    .skill-bar {
-      margin-bottom: 28px;
-    }
-    .skill-name {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 9px;
-      font-weight: 600;
-    }
-    .bar-bg {
-      height: 13px;
-      background: #222;
-      border-radius: 9999px;
-      overflow: hidden;
-      position: relative;
-    }
-    .bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent), #ff6666);
-      width: 0;
-      transition: width 2.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-      box-shadow: 0 0 18px var(--glow);
-      position: relative;
-    }
-    .bar-fill::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-      animation: lavaFlow 2.5s linear infinite;
-    }
-    @keyframes lavaFlow {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(300%); }
-    }
-
-    /* Технологии */
-    .tech-grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 14px;
-    }
-    .tech-badge {
-      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-      filter: drop-shadow(0 0 12px var(--glow));
-      opacity: 0;
-    }
-    .tech-badge.visible {
-      animation: badgePop 0.8s forwards;
-    }
-    .tech-badge:hover {
-      transform: scale(1.18) rotate(12deg);
-      filter: drop-shadow(0 0 32px var(--glow));
-    }
-
-    /* Карточки репозиториев */
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 28px;
-    }
-    .repo-card {
-      background: rgba(255,255,255,0.06);
-      border-radius: 18px;
-      padding: 26px;
-      transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-      border: 1px solid transparent;
-      position: relative;
-      overflow: hidden;
-      opacity: 0;
-      transform: translateY(40px);
-    }
-    .repo-card.visible {
-      animation: riseFromHell 0.9s forwards;
-    }
-    .repo-card::before {
-      content: "";
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 40%;
-      height: 300%;
-      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
-      transform: skewX(-25deg);
-      transition: 0.8s;
-      opacity: 0;
-    }
-    .repo-card:hover {
-      transform: translateY(-15px);
-      border-color: var(--accent);
-      box-shadow: 0 25px 45px rgba(231, 76, 60, 0.45);
-      /* animation: flameFlicker 0.1s infinite; */
-    }
-    .repo-card:hover::before {
-      opacity: 1;
-      left: 130%;
-    }
-    .repo-name {
-      font-size: 1.45rem;
-      color: var(--accent);
-      margin-bottom: 12px;
-    }
-    .repo-desc {
-      opacity: 0.88;
-      line-height: 1.55;
-    }
-    .repo-lang {
-      margin-top: 22px;
-      font-size: 0.98rem;
-      display: flex;
-      align-items: center;
-      gap: 9px;
-    }
-
-    .contrib-graph {
-      background: #111;
-      padding: 32px;
-      border-radius: 18px;
-      overflow: hidden;
-      position: relative;
-    }
-    .contrib-graph img {
-      transition: all 0.6s ease;
-    }
-    .contrib-graph:hover img {
-      transform: scale(1.03);
-      filter: brightness(1.15) contrast(1.1);
-    }
-
-    .footer {
-      text-align: center;
-      padding: 70px 20px;
-      background: var(--panel-bg);
-      font-size: 1.15rem;
-      border-top: 3px solid var(--accent);
-    }
-    .glow-text {
-      animation: flameFlicker 2.5s infinite alternate;
-    }
-
-    @keyframes pulse-glow {
-      from { box-shadow: 0 0 65px 25px var(--glow); }
-      to { box-shadow: 0 0 110px 45px var(--glow); }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
+  <!-- Верхняя панель с меню (адаптивное) -->
   <div class="top-panel">
-    <div class="menu">
-      <div class="menu-item">
-        Обзор
-        <div class="dropdown">
-          <p>💢🖤 Schrödinger | Luci-fer 🖤👾</p>
-          <p>schrodinger71 • Fallen Angel • CEO Hell 👑</p>
+    <div class="menu-container">
+      <div class="menu-toggle" id="menuToggle">☰</div>
+      <div class="menu" id="mainMenu">
+        <div class="menu-item" data-dropdown="overview">
+          Обзор
+          <div class="dropdown" id="dropdown-overview">
+            <p>💢🖤 Schrödinger | Luci-fer 🖤👾</p>
+            <p>schrodinger71 • Fallen Angel • CEO Hell 👑</p>
+          </div>
         </div>
-      </div>
-      <div class="menu-item">
-        Репозитории
-        <div class="dropdown">
-          <p>Мои реальные проекты</p>
-          <a href="#" onclick="showModal('git-sec-monitor')">git-sec-monitor</a>
-          <a href="#" onclick="showModal('university-schedule-bot')">university-schedule-bot</a>
-          <a href="#" onclick="showModal('KiberIncidentHub')">KiberIncidentHub</a>
-          <a href="#" onclick="showModal('FaceRecognitionProject')">FaceRecognitionProject</a>
-          <a href="#" onclick="showModal('devsecops-demo')">devsecops-demo</a>
-          <a href="#" onclick="showModal('Dev-bot')">Dev-bot </a>
-          <a href="#" onclick="showModal('prismia-bot')">prismia-bot</a>
-          <a href="#" onclick="showModal('AnagiriumBot')">AnagiriumBot</a>
-          <a href="#" onclick="showModal('config-demon')">config-demon</a>
+        <div class="menu-item" data-dropdown="repos">
+          Репозитории
+          <div class="dropdown" id="dropdown-repos">
+            <p>Мои реальные проекты</p>
+            <a href="#" onclick="showModal('git-sec-monitor')">git-sec-monitor</a>
+            <a href="#" onclick="showModal('university-schedule-bot')">university-schedule-bot</a>
+            <a href="#" onclick="showModal('KiberIncidentHub')">KiberIncidentHub</a>
+            <a href="#" onclick="showModal('FaceRecognitionProject')">FaceRecognitionProject</a>
+            <a href="#" onclick="showModal('devsecops-demo')">devsecops-demo</a>
+            <a href="#" onclick="showModal('Dev-bot')">Dev-bot</a>
+            <a href="#" onclick="showModal('prismia-bot')">prismia-bot</a>
+            <a href="#" onclick="showModal('AnagiriumBot')">AnagiriumBot</a>
+            <a href="#" onclick="showModal('config-demon')">config-demon</a>
+          </div>
         </div>
-      </div>
-      <div class="menu-item">
-        Технологии
-        <div class="dropdown">
-          <p>C++ • C# • Python • Go • Docker • DevOps • Security</p>
+        <div class="menu-item" data-dropdown="tech">
+          Технологии
+          <div class="dropdown" id="dropdown-tech">
+            <p>C++ • C# • Python • Go • Docker • DevOps • Security</p>
+          </div>
         </div>
-      </div>
-      <div class="menu-item">
-        Активность
-        <div class="dropdown">
-          <p>График вклада за последний год 🔥</p>
+        <div class="menu-item" data-dropdown="activity">
+          Активность
+          <div class="dropdown" id="dropdown-activity">
+            <p>График вклада за последний год 🔥</p>
+          </div>
         </div>
-      </div>
-      <div class="menu-item">
-        Контакты
-        <div class="dropdown">
-          <p>Свяжись со мной в аду:</p>
-          <a href="https://t.me/schrodinger714" target="_blank">📱 Telegram</a>
-          <a href="#" onclick="discordCopy()">💬 Discord: schrodinger71</a>
+        <div class="menu-item" data-dropdown="contacts">
+          Контакты
+          <div class="dropdown" id="dropdown-contacts">
+            <p>Свяжись со мной в аду:</p>
+            <a href="https://t.me/schrodinger714" target="_blank">📱 Telegram</a>
+            <a href="#" onclick="discordCopy()">💬 Discord: schrodinger71</a>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <div class="content">
-    <!-- HERO -->
+    <!-- HERO-БЛОК -->
     <section class="hero">
-      <div>
+      <div class="hero-inner">
         <div class="avatar-container">
           <div class="avatar" id="avatar">😈</div>
         </div>
@@ -491,45 +72,43 @@
         <div class="title">♨️ She's Luci ❖ Fallen Angel ❖ CEO Hell 👑</div>
         <div class="typing" id="typing-text"></div>
         
-        <p style="margin-top: 35px; font-size: 1.35rem; max-width: 760px; margin-left: auto; margin-right: auto; opacity: 0.9;">
+        <p class="hero-description">
           Midnight Coder (UTC+3) 🌙 • Technical Administrator 📡<br>
           IT Security Specialist 🛡️ • Bot Architect &amp; Operator 🤖<br>
           Docker Enthusiast 🐳 • DevOps Builder 🏗️ • Russia, Tula
         </p>
 
-        <div style="margin-top: 55px; display: flex; justify-content: center; gap: 20px;">
-          <button onclick="triggerHellMode()" style="background: var(--accent); color: #fff; border: none; padding: 18px 48px; font-size: 1.35rem; border-radius: 50px; cursor: pointer; box-shadow: 0 0 35px var(--glow); transition: 0.4s; position: relative; z-index: 100;">
-              🔥 АКТИВИРОВАТЬ АД (JS DEMO)
-          </button>
-          <div id="status-badge" style="background: rgba(231,76,60,0.2); border: 2px solid var(--accent); color: var(--accent); padding: 12px 28px; border-radius: 50px; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; animation: flameFlicker 1.5s infinite;">
+        <div class="hero-buttons">
+          <button onclick="triggerHellMode()" class="hell-mode-btn">🔥 АКТИВИРОВАТЬ АД (JS DEMO)</button>
+          <div id="status-badge" class="status-badge">
             <span>👾 DEMONIC STATUS:</span> 
-            <span id="live-dot" style="display: inline-block; width: 12px; height: 12px; background: #0f0; border-radius: 50%; box-shadow: 0 0 15px #0f0; animation: livePulse 1.2s infinite;"></span> 
+            <span id="live-dot" class="live-dot"></span> 
             ONLINE IN HELL
           </div>
         </div>
 
-        <div style="margin-top: 85px; font-size: 1.05rem; opacity: 0.7;">
+        <div class="hero-stats">
           17 followers • 45 following • 89+ репозиториев в аду
         </div>
       </div>
     </section>
 
-    <!-- ABOUT ME -->
+    <!-- ОБО МНЕ -->
     <div class="section">
       <h2 class="section-title">Обо мне</h2>
-      <p style="font-size: 1.35rem; line-height: 1.7; text-align: center; max-width: 920px; margin: 0 auto;">
+      <p class="about-text">
         Я — Schrödinger. Полуночный кодер. Пишу на C++, C#, Python и Go.<br>
         Создаю системы безопасности, ботов, DevOps-инфраструктуру и инструменты автоматизации.<br>
         Всегда экспериментирую и делаю код, который <strong>оживает</strong>.
       </p>
     </div>
 
-    <!-- GITHUB STATS -->
+    <!-- GITHUB СТАТИСТИКА -->
     <div class="section">
       <h2 class="section-title">GitHub Stats</h2>
       <div class="stats-container">
-        <img src="https://github-readme-stats-sigma-five.vercel.app/api/top-langs/?username=Schrodinger71&amp;theme=dracula&amp;layout=compact&amp;hide_border=true&amp;bg_color=00000000" alt="Top Languages" style="max-width: 480px;">
-        <img src="https://github-readme-stats-sigma-five.vercel.app/api?username=schrodinger71&amp;count_private=true&amp;show_icons=true&amp;theme=dracula&amp;hide_border=true&amp;bg_color=00000000" alt="GitHub Stats" style="max-width: 480px;">
+        <img class="stats-img" src="https://github-readme-stats-sigma-five.vercel.app/api/top-langs/?username=Schrodinger71&amp;theme=dracula&amp;layout=compact&amp;hide_border=true&amp;bg_color=00000000" alt="Top Languages">
+        <img class="stats-img" src="https://github-readme-stats-sigma-five.vercel.app/api?username=schrodinger71&amp;count_private=true&amp;show_icons=true&amp;theme=dracula&amp;hide_border=true&amp;bg_color=00000000" alt="GitHub Stats">
       </div>
     </div>
 
@@ -537,7 +116,7 @@
     <div class="section">
       <h2 class="section-title">Технологии &amp; Инструменты</h2>
       <div class="tech-grid" id="tech-grid">
-        <!-- все бейджи ниже -->
+        <!-- все бейджи -->
         <img class="tech-badge" src="https://img.shields.io/badge/C++-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white" alt="C++">
         <img class="tech-badge" src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white" alt="C#">
         <img class="tech-badge" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
@@ -563,10 +142,11 @@
       </div>
     </div>
 
-    <!-- ПИННЕД РЕПО -->
+    <!-- ПРОЕКТЫ (ПИННЕД РЕПО) -->
     <div class="section">
       <h2 class="section-title">Пиннед проекты</h2>
       <div class="projects-grid" id="projects-grid">
+        <!-- 12 карточек как в оригинале -->
         <div class="repo-card" onclick="showModal('git-sec-monitor')">
           <div class="repo-name">🔥 git-sec-monitor</div>
           <div class="repo-desc">Мониторинг безопасности Git-репозиториев. Написан на Python.</div>
@@ -630,7 +210,7 @@
       </div>
     </div>
 
-    <!-- НАВЫКИ -->
+    <!-- НАВЫКИ (АДСКИЙ СТЕК) -->
     <div class="section">
       <h2 class="section-title">Адский стек навыков</h2>
       <div class="skills">
@@ -657,213 +237,34 @@
       </div>
     </div>
 
-    <!-- ГРАФИК -->
+    <!-- ГРАФИК АКТИВНОСТИ -->
     <div class="section">
       <h2 class="section-title">Активность • Последний год</h2>
       <div class="contrib-graph">
         <img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=schrodinger71&theme=github_dark" 
-             style="width: 100%; border-radius: 16px; box-shadow: 0 0 30px rgba(231, 76, 60, 0.3);" alt="GitHub contribution graph">
-        <p style="text-align: center; margin-top: 16px; opacity: 0.75;">
-          📊 Данные напрямую с GitHub • Коммиты, PR, ревью
-        </p>
+             class="contrib-img" alt="GitHub contribution graph">
+        <p class="contrib-note">📊 Данные напрямую с GitHub • Коммиты, PR, ревью</p>
       </div>
     </div>
   </div>
 
-  <!-- МОДАЛКА -->
-  <div id="modal" onclick="if(event.target.id === 'modal')hideModal()" 
-       style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 9999; align-items: center; justify-content: center;">
-    <div onclick="event.stopImmediatePropagation()" 
-         style="background: var(--panel-bg); max-width: 660px; width: 92%; border-radius: 22px; padding: 42px; border: 3px solid var(--accent); box-shadow: 0 0 70px var(--glow);">
-      <h2 id="modal-title" style="color: var(--accent); font-size: 2.3rem; margin-bottom: 22px;"></h2>
-      <div id="modal-body" style="line-height: 1.75; font-size: 1.15rem;"></div>
-      <button onclick="hideModal()" 
-              style="margin-top: 35px; background: #fff; color: #000; border: none; padding: 14px 36px; border-radius: 50px; font-weight: bold; cursor: pointer;">
-        ЗАКРЫТЬ ВРАТА АДА
-      </button>
+  <!-- МОДАЛЬНОЕ ОКНО -->
+  <div id="modal" onclick="if(event.target.id === 'modal') hideModal()" class="modal">
+    <div class="modal-content">
+      <h2 id="modal-title" class="modal-title"></h2>
+      <div id="modal-body" class="modal-body"></div>
+      <button onclick="hideModal()" class="modal-close-btn">ЗАКРЫТЬ ВРАТА АДА</button>
     </div>
   </div>
 
-  <!-- FOOTER -->
+  <!-- ПОДВАЛ -->
   <div class="footer">
     <p>© schrodinger71 • Built with pure Hell &amp; beautiful JS • 2026</p>
-    <p style="margin-top: 12px; font-size: 0.95rem; opacity: 0.65;">
-      🔥 Теперь ещё больше анимаций: сканирующая линия, мерцающий огонь, всплывающие бейджи, лавовые прогресс-бары, rise-from-hell, Hell Mode с тряской и многое другое!
-    </p>
+    <p class="footer-note">🔥 Теперь ещё больше анимаций: сканирующая линия, мерцающий огонь, всплывающие бейджи, лавовые прогресс-бары, rise-from-hell, Hell Mode с тряской и многое другое!</p>
   </div>
 
   <canvas id="hell-canvas"></canvas>
 
-  <script>
-    const typingText = document.getElementById('typing-text');
-    const phrases = [
-      "Midnight Coder (UTC+3) 🌙",
-      "IT Security Specialist 🛡️",
-      "Technical Administrator 📡",
-      "Bot Architect & Operator 🤖",
-      "Docker Enthusiast 🐳 • DevOps Builder 🏗️"
-    ];
-    let phraseIndex = 0;
-    let charIndex = 0;
-    let isDeleting = false;
-    function type() {
-      const current = phrases[phraseIndex];
-      if (isDeleting) {
-        typingText.textContent = current.substring(0, charIndex - 1);
-        charIndex--;
-      } else {
-        typingText.textContent = current.substring(0, charIndex + 1);
-        charIndex++;
-      }
-      if (!isDeleting && charIndex === current.length) {
-        setTimeout(() => isDeleting = true, 2200);
-      } else if (isDeleting && charIndex === 0) {
-        isDeleting = false;
-        phraseIndex = (phraseIndex + 1) % phrases.length;
-      }
-      setTimeout(type, isDeleting ? 45 : 75);
-    }
-
-    const canvas = document.getElementById('hell-canvas');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    const symbols = ['🔥', '🖤', '👾', '💢', '♨️', '⚡', '🔐', '🐳', '🛡️'];
-    class Particle {
-      constructor() { this.reset(); }
-      reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height * 0.6;
-        this.size = Math.random() * 26 + 12;
-        this.speedY = Math.random() * 1.8 + 0.1;
-        this.speedX = (Math.random() - 0.5) * 1.2;
-        this.symbol = symbols[Math.floor(Math.random() * symbols.length)];
-        this.alpha = Math.random() * 0.9 + 0.2;
-        this.rotation = Math.random() * 360;
-        this.rotSpeed = (Math.random() - 0.5) * 5;
-        this.life = Math.random() * 180 + 120;
-      }
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        this.rotation += this.rotSpeed;
-        this.alpha -= 0.006;
-        this.life--;
-        if (this.alpha <= 0 || this.life <= 0 || this.y > canvas.height) this.reset();
-      }
-      draw() {
-        ctx.save();
-        ctx.globalAlpha = this.alpha;
-        ctx.translate(this.x, this.y);
-        ctx.rotate(this.rotation * Math.PI / 180);
-        ctx.font = `${this.size}px system-ui`;
-        ctx.fillText(this.symbol, 0, 0);
-        ctx.restore();
-      }
-    }
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    function animateParticles() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => { p.update(); p.draw(); });
-      if (particles.length < 180) particles.push(new Particle()); // ещё больше частиц
-      requestAnimationFrame(animateParticles);
-    }
-
-    function animateOnScroll() {
-      const sections = document.querySelectorAll('.section');
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.15 });
-      sections.forEach(section => observer.observe(section));
-
-      // Стайджер для tech badges
-      const badges = document.querySelectorAll('.tech-badge');
-      badges.forEach((badge, i) => {
-        setTimeout(() => badge.classList.add('visible'), 300 + i * 28);
-      });
-
-      // Стайджер для repo cards
-      const cards = document.querySelectorAll('.repo-card');
-      cards.forEach((card, i) => {
-        setTimeout(() => card.classList.add('visible'), 800 + i * 140);
-      });
-    }
-
-    function animateSkills() {
-      document.querySelectorAll('.bar-fill').forEach(bar => {
-        const w = bar.getAttribute('data-width');
-        setTimeout(() => bar.style.width = w + '%', 900);
-      });
-    }
-
-    function showModal(project) {
-      const modal = document.getElementById('modal');
-      const titleEl = document.getElementById('modal-title');
-      const bodyEl = document.getElementById('modal-body');
-      if (project === 'git-sec-monitor') {
-        titleEl.textContent = '🔥 git-sec-monitor';
-        bodyEl.innerHTML = `<p>Мониторинг уязвимостей Git-репозиториев. Полная защита кода от демонов.</p><p><strong>Язык:</strong> Python</p>`;
-      } else if (project === 'university-schedule-bot') {
-        titleEl.textContent = '📅 university-schedule-bot';
-        bodyEl.innerHTML = `<p>Discord-бот для расписания университета. Автоматизация уведомлений и команд.</p><p><strong>Язык:</strong> Python • Bot Architect</p>`;
-      } else if (project === 'go-product-api') {
-        titleEl.textContent = '🌀 go-product-api';
-        bodyEl.innerHTML = `<p>Высокопроизводительный API для управления товарами.</p><p><strong>Язык:</strong> Go • DevOps</p>`;
-      }
-      modal.style.display = 'flex';
-      // лёгкая тряска модалки при открытии
-      const modalContent = modal.querySelector('div');
-      modalContent.style.animation = 'shakeHell 0.4s';
-      setTimeout(() => modalContent.style.animation = '', 500);
-    }
-    function hideModal() {
-      document.getElementById('modal').style.display = 'none';
-    }
-
-    function triggerHellMode() {
-          const avatar = document.getElementById('avatar');
-          avatar.style.transitionDuration = '0.8s';
-          avatar.style.transform = 'scale(1.9) rotate(1080deg)';
-          const flash = document.createElement('div');
-          flash.style.cssText = `position:fixed;inset:0;background:rgba(231,76,60,0.75);z-index:99999;pointer-events:none;transition:opacity 1.6s;`;
-          document.body.appendChild(flash);
-          document.body.style.animation = 'shakeHell 0.6s';
-          setTimeout(() => { flash.style.opacity = '0'; document.body.style.animation = ''; }, 120);
-          setTimeout(() => { flash.remove(); avatar.style.transform = ''; }, 1800);
-          for (let i = 0; i < 140; i++) {
-            const p = new Particle();
-            p.alpha = 1; p.speedY = Math.random()*9+4; p.speedX = (Math.random()-0.5)*6;
-            particles.push(p);
-          }
-    }
-
-    function discordCopy() {
-      navigator.clipboard.writeText('schrodinger71').then(() => {
-        const n = document.createElement('div');
-        n.textContent = '✅ schrodinger71 скопирован!';
-        n.style.cssText = `position:fixed;bottom:40px;left:50%;transform:translateX(-50%);background:#e74c3c;color:#fff;padding:16px 34px;border-radius:50px;box-shadow:0 0 35px #e74c3c;z-index:99999;animation:flameFlicker 1s infinite;`;
-        document.body.appendChild(n);
-        setTimeout(() => n.remove(), 2600);
-      });
-    }
-
-    // ====================== ЗАПУСК ВСЕГО ======================
-    window.onload = () => {
-      resizeCanvas();
-      window.addEventListener('resize', resizeCanvas);
-      type();
-      animateParticles();
-      animateOnScroll();
-      animateSkills();
-      console.log('%c✅ Сайт schrodinger71! Helltaker + JS красота на максимуме 🔥', 'color:#e74c3c;font-size:24px;font-weight:900;');
-    };
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>

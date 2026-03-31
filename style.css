@@ -1,0 +1,806 @@
+:root {
+  --bg-color: #000;
+  --panel-bg: rgba(0, 0, 0, 0.78);
+  --hover-bg: rgba(231, 76, 60, 0.25);
+  --text-color: #fff;
+  --accent: #e74c3c;
+  --glow: #e74c3c;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+body, html {
+  height: 100%;
+  background-color: var(--bg-color);
+  overflow-x: hidden;
+  color: var(--text-color);
+}
+
+/* CANVAS PARTICLE BACKGROUND */
+#hell-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.45;
+}
+
+/* === АНИМАЦИИ === */
+@keyframes flameFlicker {
+  0%, 100% { text-shadow: 0 0 12px var(--glow); }
+  50% { text-shadow: 0 0 28px var(--glow), 0 0 40px #ff4444; }
+}
+
+@keyframes badgePop {
+  0% { opacity: 0; transform: scale(0.6) rotate(-12deg); }
+  60% { transform: scale(1.2) rotate(8deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes riseFromHell {
+  0% { opacity: 0; transform: translateY(80px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(300%); }
+}
+
+@keyframes shakeHell {
+  0%, 100% { transform: translate(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translate(-4px, 2px); }
+  20%, 40%, 60%, 80% { transform: translate(4px, -2px); }
+}
+
+@keyframes livePulse {
+  0% { opacity: 0.3; transform: scale(1);}
+  100% { opacity: 1; transform: scale(1.3);}
+}
+
+/* ВЕРХНЯЯ ПАНЕЛЬ */
+.top-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: var(--panel-bg);
+  backdrop-filter: blur(14px);
+  z-index: 1000;
+  border-bottom: 3px solid var(--accent);
+  box-shadow: 0 0 25px var(--glow);
+  padding: 14px 0;
+}
+
+.menu-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.menu-toggle {
+  display: none;
+  font-size: 2.2rem;
+  cursor: pointer;
+  color: var(--accent);
+  background: none;
+  border: none;
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.menu {
+  display: flex;
+  gap: 2.8rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.menu-item {
+  position: relative;
+  color: var(--text-color);
+  padding: 9px 20px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-size: 1.15rem;
+}
+
+.menu-item:hover {
+  background: var(--hover-bg);
+  border-radius: 8px;
+  transform: translateY(-3px);
+  box-shadow: 0 0 20px var(--glow);
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%, 15px);
+  background: var(--panel-bg);
+  backdrop-filter: blur(14px);
+  color: var(--text-color);
+  padding: 20px 28px;
+  border-radius: 14px;
+  box-shadow: 0 12px 35px rgba(231, 76, 60, 0.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  min-width: 280px;
+  text-align: center;
+  border: 2px solid var(--accent);
+  z-index: 1001;
+}
+
+.menu-item:hover .dropdown,
+.menu-item.active .dropdown {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  pointer-events: auto;
+}
+
+.dropdown p {
+  margin-bottom: 14px;
+  font-size: 1.05rem;
+  opacity: 0.95;
+}
+
+.dropdown a {
+  display: block;
+  color: var(--accent);
+  text-decoration: none;
+  padding: 9px 0;
+  transition: 0.3s;
+}
+
+.dropdown a:hover {
+  color: #fff;
+  text-shadow: 0 0 12px var(--glow);
+}
+
+/* ОСНОВНОЙ КОНТЕНТ */
+.content {
+  position: relative;
+  z-index: 10;
+  padding-top: 95px;
+}
+
+/* HERO СЕКЦИЯ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 45%;
+  background: linear-gradient(transparent, var(--bg-color));
+  z-index: 1;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(transparent, rgba(231, 76, 60, 0.15), transparent);
+  z-index: 2;
+  pointer-events: none;
+  animation: scanline 6s linear infinite;
+  opacity: 0.15;
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 5;
+  padding: 20px;
+}
+
+.avatar-container {
+  position: relative;
+  margin: 0 auto 35px;
+  width: 240px;
+  height: 240px;
+}
+
+.avatar {
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e74c3c, #9b2222);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 120px;
+  box-shadow: 0 0 70px 25px var(--glow), inset 0 0 45px rgba(255,255,255,0.35);
+  border: 9px solid #fff;
+  transition: all 0.7s ease;
+  animation: pulse-glow 3.5s infinite alternate ease-in-out;
+}
+
+.avatar:hover {
+  transform: scale(1.12) rotate(12deg);
+  box-shadow: 0 0 90px 35px var(--glow);
+}
+
+.hero h1 {
+  font-size: 4.8rem;
+  font-weight: 900;
+  text-shadow: 0 0 45px var(--glow), 0 0 90px var(--accent);
+  margin-bottom: 12px;
+  letter-spacing: -3px;
+  animation: flameFlicker 1.8s infinite;
+}
+
+.hero .title {
+  font-size: 1.95rem;
+  color: var(--accent);
+  margin-bottom: 22px;
+  text-shadow: 0 0 25px var(--glow);
+}
+
+.typing {
+  font-size: 1.45rem;
+  height: 42px;
+  color: #fff;
+  opacity: 0.92;
+}
+
+.hero-description {
+  margin-top: 35px;
+  font-size: 1.35rem;
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
+  opacity: 0.9;
+}
+
+.hero-buttons {
+  margin-top: 55px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.hell-mode-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 18px 48px;
+  font-size: 1.35rem;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 0 35px var(--glow);
+  transition: 0.4s;
+  z-index: 100;
+}
+
+.hell-mode-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 55px var(--glow);
+}
+
+.status-badge {
+  background: rgba(231,76,60,0.2);
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  padding: 12px 28px;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: flameFlicker 1.5s infinite;
+}
+
+.live-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background: #0f0;
+  border-radius: 50%;
+  box-shadow: 0 0 15px #0f0;
+  animation: livePulse 1.2s infinite;
+}
+
+.hero-stats {
+  margin-top: 85px;
+  font-size: 1.05rem;
+  opacity: 0.7;
+}
+
+/* СЕКЦИИ */
+.section {
+  padding: 110px 8%;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(12px);
+  margin: 45px auto;
+  max-width: 1300px;
+  border-radius: 22px;
+  box-shadow: 0 0 45px rgba(231, 76, 60, 0.35);
+  opacity: 0;
+  transform: translateY(80px);
+  transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.section.visible {
+  opacity: 1;
+  transform: translateY(0);
+  animation: riseFromHell 1.2s ease forwards;
+}
+
+.section-title {
+  font-size: 2.9rem;
+  margin-bottom: 45px;
+  text-align: center;
+  position: relative;
+  animation: flameFlicker 2s infinite;
+}
+
+.section-title::after {
+  content: "";
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 5px;
+  background: var(--accent);
+  box-shadow: 0 0 18px var(--glow);
+}
+
+.about-text {
+  font-size: 1.35rem;
+  line-height: 1.7;
+  text-align: center;
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+/* СТАТИСТИКА GITHUB */
+.stats-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  margin: 40px 0;
+}
+
+.stats-img {
+  border-radius: 16px;
+  box-shadow: 0 0 30px rgba(231, 76, 60, 0.3);
+  transition: 0.4s;
+  max-width: 100%;
+}
+
+.stats-img:hover {
+  transform: scale(1.05) rotate(2deg);
+  box-shadow: 0 0 50px var(--glow);
+}
+
+/* ТЕХНОЛОГИИ */
+.tech-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+
+.tech-badge {
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  filter: drop-shadow(0 0 12px var(--glow));
+  opacity: 0;
+}
+
+.tech-badge.visible {
+  animation: badgePop 0.8s forwards;
+}
+
+.tech-badge:hover {
+  transform: scale(1.18) rotate(12deg);
+  filter: drop-shadow(0 0 32px var(--glow));
+}
+
+/* ПРОЕКТЫ */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 28px;
+}
+
+.repo-card {
+  background: rgba(255,255,255,0.06);
+  border-radius: 18px;
+  padding: 26px;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  border: 1px solid transparent;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(40px);
+  cursor: pointer;
+}
+
+.repo-card.visible {
+  animation: riseFromHell 0.9s forwards;
+}
+
+.repo-card::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 40%;
+  height: 300%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
+  transform: skewX(-25deg);
+  transition: 0.8s;
+  opacity: 0;
+}
+
+.repo-card:hover {
+  transform: translateY(-15px);
+  border-color: var(--accent);
+  box-shadow: 0 25px 45px rgba(231, 76, 60, 0.45);
+}
+
+.repo-card:hover::before {
+  opacity: 1;
+  left: 130%;
+}
+
+.repo-name {
+  font-size: 1.45rem;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.repo-desc {
+  opacity: 0.88;
+  line-height: 1.55;
+}
+
+.repo-lang {
+  margin-top: 22px;
+  font-size: 0.98rem;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+/* НАВЫКИ (БАРЫ) */
+.skills {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
+}
+
+.skill-name {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 9px;
+  font-weight: 600;
+}
+
+.bar-bg {
+  height: 13px;
+  background: #222;
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #ff6666);
+  width: 0;
+  transition: width 2.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 0 18px var(--glow);
+  position: relative;
+}
+
+.bar-fill::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: lavaFlow 2.5s linear infinite;
+}
+
+@keyframes lavaFlow {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
+}
+
+/* ГРАФИК АКТИВНОСТИ */
+.contrib-graph {
+  background: #111;
+  padding: 32px;
+  border-radius: 18px;
+  overflow: hidden;
+  position: relative;
+}
+
+.contrib-img {
+  width: 100%;
+  border-radius: 16px;
+  transition: all 0.6s ease;
+}
+
+.contrib-graph:hover .contrib-img {
+  transform: scale(1.03);
+  filter: brightness(1.15) contrast(1.1);
+}
+
+.contrib-note {
+  text-align: center;
+  margin-top: 16px;
+  opacity: 0.75;
+}
+
+/* МОДАЛЬНОЕ ОКНО */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: var(--panel-bg);
+  max-width: 660px;
+  width: 92%;
+  border-radius: 22px;
+  padding: 42px;
+  border: 3px solid var(--accent);
+  box-shadow: 0 0 70px var(--glow);
+  margin: 20px;
+}
+
+.modal-title {
+  color: var(--accent);
+  font-size: 2.3rem;
+  margin-bottom: 22px;
+}
+
+.modal-body {
+  line-height: 1.75;
+  font-size: 1.15rem;
+}
+
+.modal-close-btn {
+  margin-top: 35px;
+  background: #fff;
+  color: #000;
+  border: none;
+  padding: 14px 36px;
+  border-radius: 50px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* ПОДВАЛ */
+.footer {
+  text-align: center;
+  padding: 70px 20px;
+  background: var(--panel-bg);
+  font-size: 1.15rem;
+  border-top: 3px solid var(--accent);
+}
+
+.footer-note {
+  margin-top: 12px;
+  font-size: 0.95rem;
+  opacity: 0.65;
+}
+
+.glow-text {
+  animation: flameFlicker 2.5s infinite alternate;
+}
+
+@keyframes pulse-glow {
+  from { box-shadow: 0 0 65px 25px var(--glow); }
+  to { box-shadow: 0 0 110px 45px var(--glow); }
+}
+
+/* === МОБИЛЬНАЯ АДАПТАЦИЯ === */
+@media (max-width: 768px) {
+  .top-panel {
+    padding: 10px 0;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .menu {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    background: var(--panel-bg);
+    backdrop-filter: blur(14px);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    padding: 20px 0;
+    gap: 0;
+    border-bottom: 2px solid var(--accent);
+  }
+
+  .menu.active {
+    display: flex;
+  }
+
+  .menu-item {
+    padding: 15px 20px;
+    text-align: center;
+    width: 100%;
+  }
+
+  .dropdown {
+    position: static;
+    transform: none;
+    opacity: 0;
+    pointer-events: none;
+    width: 90%;
+    margin: 10px auto;
+    left: auto;
+    right: auto;
+    box-shadow: none;
+  }
+
+  .menu-item.active .dropdown {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+    letter-spacing: -1px;
+  }
+
+  .hero .title {
+    font-size: 1.3rem;
+  }
+
+  .typing {
+    font-size: 1.1rem;
+    height: auto;
+    min-height: 50px;
+  }
+
+  .hero-description {
+    font-size: 1rem;
+    margin-top: 20px;
+  }
+
+  .avatar-container {
+    width: 160px;
+    height: 160px;
+  }
+
+  .avatar {
+    width: 160px;
+    height: 160px;
+    font-size: 80px;
+  }
+
+  .hell-mode-btn {
+    padding: 12px 24px;
+    font-size: 1rem;
+  }
+
+  .status-badge {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+  .hero-stats {
+    margin-top: 40px;
+    font-size: 0.9rem;
+  }
+
+  .section {
+    padding: 60px 5%;
+    margin: 25px 15px;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .about-text {
+    font-size: 1rem;
+  }
+
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .repo-card {
+    padding: 18px;
+  }
+
+  .skills {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-img {
+    max-width: 100%;
+  }
+
+  .contrib-graph {
+    padding: 16px;
+  }
+
+  .modal-content {
+    padding: 24px;
+  }
+
+  .modal-title {
+    font-size: 1.8rem;
+  }
+
+  .modal-body {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 1.8rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero .title {
+    font-size: 1rem;
+  }
+
+  .typing {
+    font-size: 0.9rem;
+  }
+
+  .section-title {
+    font-size: 1.6rem;
+  }
+}
