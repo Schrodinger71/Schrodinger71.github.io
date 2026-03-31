@@ -39,6 +39,171 @@ const menuToggle = document.getElementById('menuToggle');
 const mainMenu = document.getElementById('mainMenu');
 const menuItems = document.querySelectorAll('.menu-item');
 
+
+// ========== ЛОГИКА ТЕРМИНАЛА ==========
+(function() {
+  const terminalWindow = document.getElementById('terminal-window');
+  const terminalToggle = document.getElementById('terminal-toggle');
+  const terminalClose = document.querySelector('.terminal-close');
+  const terminalInput = document.getElementById('terminal-input');
+  const terminalOutput = document.getElementById('terminal-output');
+  
+  let isTerminalOpen = false;
+  
+  // Открыть/закрыть терминал
+  function openTerminal() {
+    terminalWindow.classList.add('open');
+    isTerminalOpen = true;
+    setTimeout(() => terminalInput.focus(), 100);
+  }
+  function closeTerminal() {
+    terminalWindow.classList.remove('open');
+    isTerminalOpen = false;
+  }
+  
+  terminalToggle.addEventListener('click', () => {
+    if (isTerminalOpen) closeTerminal();
+    else openTerminal();
+  });
+  terminalClose.addEventListener('click', closeTerminal);
+  
+  // Вывод строки в терминал с эффектом печати
+  function printLine(text, withTyping = true) {
+    const lineDiv = document.createElement('div');
+    lineDiv.className = 'terminal-line';
+    terminalOutput.appendChild(lineDiv);
+    terminalOutput.scrollTop = terminalOutput.scrollHeight;
+    
+    if (!withTyping) {
+      lineDiv.textContent = text;
+      return;
+    }
+    
+    let i = 0;
+    lineDiv.textContent = '';
+    const interval = setInterval(() => {
+      if (i < text.length) {
+        lineDiv.textContent += text[i];
+        i++;
+        terminalOutput.scrollTop = terminalOutput.scrollHeight;
+      } else {
+        clearInterval(interval);
+      }
+    }, 25);
+  }
+  
+  // Очистка вывода
+  function clearTerminal() {
+    terminalOutput.innerHTML = '';
+  }
+  
+  // Обработка введённой команды
+  function handleCommand(cmd) {
+    const args = cmd.trim().split(/\s+/);
+    const command = args[0].toLowerCase();
+    
+    switch(command) {
+      case 'help':
+        printLine('Доступные команды:');
+        printLine('  about      - информация о Schrödinger');
+        printLine('  skills     - список технологий');
+        printLine('  projects   - список ключевых проектов');
+        printLine('  github     - ссылка на GitHub');
+        printLine('  clear      - очистить терминал');
+        printLine('  echo [text] - повторить текст');
+        printLine('  date       - текущая дата и время');
+        printLine('  whoami     - текущий пользователь');
+        printLine('  ls         - показать содержимое текущей директории');
+        printLine('  help       - эта справка');
+        break;
+        
+      case 'about':
+        printLine('Schrödinger (Luci-fer) — CEO Hell, IT Security Specialist, Bot Architect.');
+        printLine('Работает с C++, C#, Python, Go. DevOps, Docker, Security.');
+        printLine('Telegram: @schrodinger714 | GitHub: @Schrodinger71');
+        break;
+        
+      case 'skills':
+        printLine('Основные технологии:');
+        printLine('  • Python (98%)');
+        printLine('  • C++ / C# (94%)');
+        printLine('  • Go + DevOps (92%)');
+        printLine('  • Docker & Security (95%)');
+        printLine('  • Bot Architecture (97%)');
+        break;
+        
+      case 'projects':
+        printLine('🔹 git-sec-monitor — мониторинг безопасности Git');
+        printLine('🔹 university-schedule-bot — Discord-бот для расписания');
+        printLine('🔹 go-product-api — высокопроизводительный API');
+        printLine('🔹 KiberIncidentHub — управление инцидентами');
+        printLine('🔹 FaceRecognitionProject — ИИ для распознавания лиц');
+        printLine('🔹 devsecops-demo — DevSecOps демонстрация');
+        printLine('🔹 Dev-bot, Prismia-bot, AnagiriumBot — Discord-боты для SS14');
+        printLine('🔹 config-demon — утилита для обновления билдов');
+        printLine('🔹 Minesweeper Arcade — игровой автомат внутри SS14');
+        printLine('🔹 Discord Auth System — авторизация через Discord');
+        break;
+        
+      case 'github':
+        printLine('Открываю GitHub...');
+        window.open('https://github.com/Schrodinger71', '_blank');
+        break;
+        
+      case 'clear':
+        clearTerminal();
+        break;
+        
+      case 'echo':
+        const message = args.slice(1).join(' ');
+        printLine(message || '');
+        break;
+        
+      case 'date':
+        printLine(new Date().toString());
+        break;
+        
+      case 'whoami':
+        printLine('schrodinger');
+        break;
+        
+      case 'ls':
+        printLine('Desktop  Documents  Downloads  Projects  hell_core  secrets');
+        break;
+        
+      default:
+        if (cmd.trim() === '') break;
+        printLine(`bash: ${command}: command not found`);
+        break;
+    }
+  }
+  
+  // Обработчик ввода
+  function onTerminalInput(e) {
+    if (e.key === 'Enter') {
+      const cmd = terminalInput.value;
+      if (cmd.trim() === '') {
+        terminalInput.value = '';
+        return;
+      }
+      // Выводим введённую команду
+      printLine(`schrodinger@hell:~$ ${cmd}`, false);
+      // Обрабатываем
+      handleCommand(cmd);
+      // Очищаем поле
+      terminalInput.value = '';
+      terminalOutput.scrollTop = terminalOutput.scrollHeight;
+    }
+  }
+  
+  terminalInput.addEventListener('keydown', onTerminalInput);
+  
+  // При открытии терминала фокус на input
+  terminalWindow.addEventListener('click', () => {
+    if (isTerminalOpen) terminalInput.focus();
+  });
+})();
+
 // ========== АНИМАЦИЯ ПЕЧАТИ ==========
 function type() {
   const current = phrases[phraseIndex];
