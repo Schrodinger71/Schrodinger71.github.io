@@ -227,6 +227,23 @@ function initMobileMenu() {
   });
 }
 
+fetch("https://api.github.com/users/Schrodinger71/repos?per_page=100")
+  .then(res => res.json())
+  .then(repos => {
+    const totalStars = repos.reduce((sum, repo) => sum + repo.stargazers_count, 0);
+
+    return fetch("https://api.github.com/users/Schrodinger71")
+      .then(res => res.json())
+      .then(user => {
+        document.getElementById("hero-stats").innerText =
+          `${user.followers} followers • ${user.following} following • ${user.public_repos}+ repos • ⭐ ${totalStars} stars`;
+      });
+  })
+  .catch(() => {
+    document.getElementById("hero-stats").innerText =
+      "🔥 Stats unavailable (hell connection lost)";
+  });
+
 // ========== ИНИЦИАЛИЗАЦИЯ ==========
 window.onload = () => {
   resizeCanvas();
