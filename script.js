@@ -39,9 +39,9 @@ const menuToggle = document.getElementById('menuToggle');
 const mainMenu = document.getElementById('mainMenu');
 const menuItems = document.querySelectorAll('.menu-item');
 
-
 // ========== ЛОГИКА ТЕРМИНАЛА ==========
 (function() {
+  // Получаем элементы терминала
   const terminalWindow = document.getElementById('terminal-window');
   const terminalToggle = document.getElementById('terminal-toggle');
   const terminalClose = document.querySelector('.terminal-close');
@@ -49,26 +49,27 @@ const menuItems = document.querySelectorAll('.menu-item');
   const terminalOutput = document.getElementById('terminal-output');
   
   let isTerminalOpen = false;
+  let demoRunning = false;   // флаг, чтобы демо запускалось только один раз
+  let demoCommands = [];     // очередь команд для демо
   
-  // Открыть/закрыть терминал
+  // Открыть терминал
   function openTerminal() {
-    terminalWindow.classList.add('open');
-    isTerminalOpen = true;
-    setTimeout(() => terminalInput.focus(), 100);
+    if (terminalWindow) {
+      terminalWindow.classList.add('open');
+      isTerminalOpen = true;
+      setTimeout(() => terminalInput && terminalInput.focus(), 100);
+    }
   }
+  
   function closeTerminal() {
-    terminalWindow.classList.remove('open');
-    isTerminalOpen = false;
+    if (terminalWindow) {
+      terminalWindow.classList.remove('open');
+      isTerminalOpen = false;
+    }
   }
   
-  terminalToggle.addEventListener('click', () => {
-    if (isTerminalOpen) closeTerminal();
-    else openTerminal();
-  });
-  terminalClose.addEventListener('click', closeTerminal);
-  
-  // Вывод строки в терминал с эффектом печати
-  function printLine(text, withTyping = true) {
+  // Вывод строки в терминал с анимацией печати (можно с задержкой)
+  function printLine(text, withTyping = true, speed = 25) {
     const lineDiv = document.createElement('div');
     lineDiv.className = 'terminal-line';
     terminalOutput.appendChild(lineDiv);
@@ -76,32 +77,159 @@ const menuItems = document.querySelectorAll('.menu-item');
     
     if (!withTyping) {
       lineDiv.textContent = text;
-      return;
+      return Promise.resolve();
     }
     
-    let i = 0;
-    lineDiv.textContent = '';
-    const interval = setInterval(() => {
-      if (i < text.length) {
-        lineDiv.textContent += text[i];
-        i++;
-        terminalOutput.scrollTop = terminalOutput.scrollHeight;
-      } else {
-        clearInterval(interval);
-      }
-    }, 25);
+    return new Promise((resolve) => {
+      let i = 0;
+      lineDiv.textContent = '';
+      const interval = setInterval(() => {
+        if (i < text.length) {
+          lineDiv.textContent += text[i];
+          i++;
+          terminalOutput.scrollTop = terminalOutput.scrollHeight;
+        } else {
+          clearInterval(interval);
+          resolve();
+        }
+      }, speed);
+    });
   }
   
-  // Очистка вывода
+  // Очистка терминала
   function clearTerminal() {
     terminalOutput.innerHTML = '';
   }
   
-  // Обработка введённой команды
-  function handleCommand(cmd) {
+  // Эмуляция выполнения команды с выводом
+  async function executeDemoCommand(cmd, outputLines) {
+    // Печатаем строку команды
+    await printLine(`schrodinger@hell:~$ ${cmd}`, false);
+    // Пауза для реализма
+    await new Promise(r => setTimeout(r, 400));
+    // Выводим результат (может быть несколько строк)
+    for (const line of outputLines) {
+      await printLine(line, true, 20);
+      await new Promise(r => setTimeout(r, 150));
+    }
+    await new Promise(r => setTimeout(r, 300));
+  }
+  
+  // Запуск демо-последовательности
+  async function startDemo() {
+    if (demoRunning) return;
+    demoRunning = true;
+    
+    if (!isTerminalOpen) openTerminal();
+    await new Promise(r => setTimeout(r, 500));
+    
+    clearTerminal();
+    await printLine("Welcome to Schrödinger's Hell Terminal v2.0", true, 30);
+    await printLine("Initializing secure shell...", true, 25);
+    await new Promise(r => setTimeout(r, 800));
+    await printLine("", false);
+    
+    // Серия демо-команд
+    await executeDemoCommand("whoami", ["schrodinger"]);
+    await executeDemoCommand("date", [new Date().toString()]);
+    await executeDemoCommand("ls -la", [
+      "total 42",
+      "drwxr-xr-x 1 schrodinger hell 4096 Apr  1 12:34 .",
+      "drwxr-xr-x 1 root       root 4096 Apr  1 12:00 ..",
+      "-rw-r--r-- 1 schrodinger hell  666 Apr  1 12:34 README.md",
+      "drwxr-xr-x 2 schrodinger hell 4096 Apr  1 12:34 projects/",
+      "drwxr-xr-x 2 schrodinger hell 4096 Apr  1 12:34 hell_core/"
+    ]);
+    
+    await executeDemoCommand("about", [
+      "Schrödinger (Luci-fer) — CEO Hell, IT Security Specialist, Bot Architect.",
+      "C++, C#, Python, Go · Docker · DevOps · Security",
+      "Telegram: @schrodinger714 | GitHub: @Schrodinger71"
+    ]);
+    
+    await executeDemoCommand("skills", [
+      "Python        98% ████████████████████",
+      "C++ / C#      94% ██████████████████  ",
+      "Go + DevOps   92% █████████████████   ",
+      "Docker & Sec  95% ██████████████████  ",
+      "Bot Arch      97% ███████████████████ "
+    ]);
+    
+    // Крутая команда matrix — отображает "дождь" из символов
+    await executeDemoCommand("matrix", [
+      "01001110 01101001 01100011 01100101 00100001",
+      "00110010 00110000 00110010 00110110 00100000",
+      "01101000 01100101 01101100 01101100 00100001"
+    ]);
+    
+    // Шутливая команда hack
+    await executeDemoCommand("hack", [
+      "> Scanning ports... DONE",
+      "> Bypassing firewall... ACCESS GRANTED",
+      "> Injecting payload... ██████████ 100%",
+      "> Hacking NASA... Just kidding, you are in hell 😈"
+    ]);
+    
+    // sudo с приколом
+    await executeDemoCommand("sudo rm -rf /*", [
+      "sudo: you are not in the sudoers file. This incident will be reported.",
+      "Nice try, mortal. You need hell-admin privileges."
+    ]);
+    
+    await printLine("", false);
+    await printLine("Demo finished. Type 'help' for available commands.", true, 20);
+    
+    // Ставим курсор в поле ввода
+    terminalInput && terminalInput.focus();
+  }
+  
+  // Автоматический запуск демо через 2.5 секунды после загрузки страницы
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      if (!demoRunning) startDemo();
+    }, 2500);
+  });
+  
+  // Обработчик кнопки открытия/закрытия
+  terminalToggle && terminalToggle.addEventListener('click', () => {
+    if (isTerminalOpen) closeTerminal();
+    else {
+      openTerminal();
+      // Если демо ещё не запущено, можно запустить, но чтобы не дублировать, проверим
+      if (!demoRunning) startDemo();
+    }
+  });
+  
+  terminalClose && terminalClose.addEventListener('click', closeTerminal);
+  
+  function handleUserCommand(cmd) {
     const args = cmd.trim().split(/\s+/);
     const command = args[0].toLowerCase();
     
+    if (command === 'matrix') {
+      printLine("01001110 01101001 01100011 01100101 00100001", true);
+      printLine("00110010 00110000 00110010 00110110 00100000", true);
+      printLine("01101000 01100101 01101100 01101100 00100001", true);
+      return;
+    }
+    if (command === 'hack') {
+      printLine("> Scanning ports... DONE", true);
+      printLine("> Bypassing firewall... ACCESS GRANTED", true);
+      printLine("> Injecting payload... ██████████ 100%", true);
+      printLine("> Hacking NASA... Just kidding, you are in hell 😈", true);
+      return;
+    }
+    if (command === 'sudo') {
+      if (args[1] === 'rm' && args[2] === '-rf' && args[3] === '/*') {
+        printLine("sudo: you are not in the sudoers file. This incident will be reported.", true);
+        printLine("Nice try, mortal. You need hell-admin privileges.", true);
+      } else {
+        printLine(`sudo: ${args.slice(1).join(' ')}: command not found in hell`, true);
+      }
+      return;
+    }
+    
+    // Остальные команды (help, about, skills, projects, github, clear, echo, date, whoami, ls)
     switch(command) {
       case 'help':
         printLine('Доступные команды:');
@@ -178,7 +306,6 @@ const menuItems = document.querySelectorAll('.menu-item');
     }
   }
   
-  // Обработчик ввода
   function onTerminalInput(e) {
     if (e.key === 'Enter') {
       const cmd = terminalInput.value;
@@ -186,23 +313,21 @@ const menuItems = document.querySelectorAll('.menu-item');
         terminalInput.value = '';
         return;
       }
-      // Выводим введённую команду
       printLine(`schrodinger@hell:~$ ${cmd}`, false);
-      // Обрабатываем
-      handleCommand(cmd);
-      // Очищаем поле
+      handleUserCommand(cmd);
       terminalInput.value = '';
       terminalOutput.scrollTop = terminalOutput.scrollHeight;
     }
   }
   
-  terminalInput.addEventListener('keydown', onTerminalInput);
+  terminalInput && terminalInput.addEventListener('keydown', onTerminalInput);
   
-  // При открытии терминала фокус на input
-  terminalWindow.addEventListener('click', () => {
-    if (isTerminalOpen) terminalInput.focus();
+  // При клике на окно терминала — фокус на input
+  terminalWindow && terminalWindow.addEventListener('click', () => {
+    if (isTerminalOpen && terminalInput) terminalInput.focus();
   });
 })();
+
 
 // ========== АНИМАЦИЯ ПЕЧАТИ ==========
 function type() {
