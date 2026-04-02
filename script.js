@@ -114,74 +114,174 @@ const menuItems = document.querySelectorAll('.menu-item');
     }
     await new Promise(r => setTimeout(r, 300));
   }
-  
-  // Запуск демо-последовательности
+    
+  async function sleep(ms) {
+    return new Promise(r => setTimeout(r, ms));
+  }
+
+  // Обновление последней строки (для спиннеров и прогресса)
+  async function updateLine(text) {
+    if (!terminalOutput) return;
+    const lines = terminalOutput.children;
+    if (lines.length === 0) await printLine(text, false);
+    else lines[lines.length - 1].textContent = text;
+  }
+
+  // Один прогресс-бар только при загрузке
+  async function singleProgressBar(label, duration = 1800) {
+    const steps = 30;
+    await printLine(`${label} [ ] 0%`, false);
+    for (let i = 0; i <= steps; i++) {
+      const percent = Math.floor((i / steps) * 100);
+      const bar = "█".repeat(i) + "░".repeat(steps - i);
+      await updateLine(`${label} [${bar}] ${percent}%`);
+      await sleep(duration / steps);
+    }
+  }
+
+  // Печать команды с эффектом ввода (промпт мгновенно, затем команда по буквам)
+  async function typeCommand(prompt, command, responseLines = [], delayPerChar = 100, delayAfter = 300) {
+    // выводим промпт (без перевода строки)
+    await printLine(prompt, false, 0);
+    // сохраняем ссылку на последнюю строку
+    let currentLine = prompt;
+    // печатаем команду посимвольно, обновляя последнюю строку
+    for (let char of command) {
+      currentLine += char;
+      await updateLine(currentLine);
+      await sleep(delayPerChar);
+    }
+    // добавляем перевод строки после команды (завершаем строку)
+    await printLine("", true, 0);
+    await sleep(delayAfter);
+    // выводим ответные строки
+    for (let line of responseLines) {
+      await printLine(line, true, 15);
+      await sleep(50);
+    }
+  }
+
   async function startDemo() {
     if (demoRunning) return;
     demoRunning = true;
-    
+
     if (!isTerminalOpen) openTerminal();
-    await new Promise(r => setTimeout(r, 500));
-    
+    await sleep(400);
     clearTerminal();
-    await printLine("Welcome to Schrödinger's Hell Terminal v2.0", true, 30);
-    await printLine("Initializing secure shell...", true, 25);
-    await new Promise(r => setTimeout(r, 800));
+
+    // ========== ЗАГРУЗКА ОС (один прогресс-бар) ==========
+    await printLine("Schrödinger's Hell Terminal v2.0", true, 100);
+    await sleep(300);
+    await singleProgressBar("Booting system", 1800);
+    await printLine("[✓] Kernel 5.15.0-hell loaded", true, 20);
+    await sleep(150);
+    await printLine("[✓] Security modules (firewall, ids, crypto)", true, 20);
+    await sleep(150);
+    await printLine("[✓] Neural interface handshake (TLS 1.3)", true, 20);
+    await sleep(300);
     await printLine("", false);
-    
-    // Серия демо-команд
-    // await executeDemoCommand("whoami", ["schrodinger"]);
-    // await executeDemoCommand("date", [new Date().toString()]);
-    await executeDemoCommand("ls -la", [
-      "total 42",
-      "drwxr-xr-x 1 schrodinger hell 4096 Apr  1 12:34 .",
-      "drwxr-xr-x 1 root       root 4096 Apr  1 12:00 ..",
-      "-rw-r--r-- 1 schrodinger hell  666 Apr  1 12:34 README.md",
-      "drwxr-xr-x 2 schrodinger hell 4096 Apr  1 12:34 projects/",
-      "drwxr-xr-x 2 schrodinger hell 4096 Apr  1 12:34 hell_core/"
-    ]);
-    
-    await executeDemoCommand("about", [
-      "Schrödinger (Luci-fer) — CEO Hell, IT Security Specialist, Bot Architect.",
-      "C++, C#, Python, Go · Docker · DevOps · Security",
-      "Telegram: @schrodinger714 | GitHub: @Schrodinger71"
-    ]);
-    
-    // await executeDemoCommand("skills", [
-    //   "Python        98% ████████████████████",
-    //   "C++ / C#      94% ██████████████████  ",
-    //   "Go + DevOps   92% █████████████████   ",
-    //   "Docker & Sec  95% ██████████████████  ",
-    //   "Bot Arch      97% ███████████████████ "
-    // ]);
-    
-    // // Крутая команда matrix — отображает "дождь" из символов
-    // await executeDemoCommand("matrix", [
-    //   "01001110 01101001 01100011 01100101 00100001",
-    //   "00110010 00110000 00110010 00110110 00100000",
-    //   "01101000 01100101 01101100 01101100 00100001"
-    // ]);
-    
-    // Шутливая команда hack
-    await executeDemoCommand("hack", [
-      "> Scanning ports... DONE",
-      "> Bypassing firewall... ACCESS GRANTED",
-      "> Injecting payload... ██████████ 100%",
-      "> Hacking NASA... Just kidding, you are in hell 😈"
-    ]);
-    
-    // sudo с приколом
-    await executeDemoCommand("sudo rm -rf /*", [
-      "sudo: you are not in the sudoers file. This incident will be reported.",
-      "Nice try, mortal. You need hell-admin privileges."
-    ]);
-    
+    await printLine("> System ready. Starting attack sequence...", true, 30);
+    await sleep(800);
+    clearTerminal();
+
+    // ========== METASPLOIT ==========
+    await printLine("$ msfconsole", true, 30);
+    await sleep(400);
+    await printLine("       =[ metasploit v6.3.0-dev", true, 15);
+    await printLine("+ -- --=[ 2377 exploits - 1222 auxiliary", true, 15);
+    await printLine("+ -- --=[ 1380 payloads - 45 encoders", true, 15);
+    await sleep(600);
     await printLine("", false);
-    await printLine("Demo finished. Type 'help' for available commands.", true, 20);
+
+    // use exploit/multi/handler
+    await typeCommand("msf6 > ", "use exploit/multi/handler", [], 100, 300);
     
-    // Ставим курсор в поле ввода
+    // set PAYLOAD
+    await typeCommand("msf6 exploit(multi/handler) > ", "set PAYLOAD linux/x64/meterpreter/reverse_tcp", 
+      ["PAYLOAD => linux/x64/meterpreter/reverse_tcp"], 100, 300);
+    
+    // set LHOST
+    await typeCommand("msf6 exploit(multi/handler) > ", "set LHOST 10.0.0.42", 
+      ["LHOST => 10.0.0.42"], 100, 300);
+    
+    // set LPORT
+    await typeCommand("msf6 exploit(multi/handler) > ", "set LPORT 4444", 
+      ["LPORT => 4444"], 100, 300);
+    
+    // exploit (запуск)
+    await typeCommand("msf6 exploit(multi/handler) > ", "exploit", 
+      ["[*] Started reverse TCP handler on 10.0.0.42:4444"], 100, 500);
+
+    // ========== NMAP ==========
+    await printLine("", false);
+    await typeCommand("msf6 exploit(multi/handler) > ", "db_nmap -sS 10.0.0.0/24", [], 100, 300);
+    
+    await printLine("Starting Nmap 7.94 at 2025-04-02 13:37 UTC", true, 15);
+    const spinFrames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+    for (let i = 0; i < 20; i++) {
+      await updateLine(`\r${spinFrames[i % spinFrames.length]} Scanning 256 hosts ...`);
+      await sleep(60);
+    }
+    await updateLine("\r✓ Scan complete. 1 host up.\n");
+    await sleep(300);
+    await printLine("Nmap scan report for 10.0.0.42", true, 15);
+    await printLine("PORT     STATE SERVICE    VERSION", true, 10);
+    await printLine("22/tcp   open  ssh        OpenSSH 8.9p1", true, 10);
+    await printLine("3306/tcp open  mysql      MySQL 8.0", true, 10);
+    await printLine("6669/tcp open  hell-port  Schrödinger's Hell daemon 2.0", true, 10);
+    await sleep(800);
+
+    // ========== ЭКСПЛУАТАЦИЯ ==========
+    await printLine("", false);
+    await typeCommand("msf6 exploit(multi/handler) > ", "set RHOST 10.0.0.42", 
+      ["RHOST => 10.0.0.42"], 100, 300);
+    await typeCommand("msf6 exploit(multi/handler) > ", "set RPORT 6669", 
+      ["RPORT => 6669"], 100, 300);
+    await typeCommand("msf6 exploit(multi/handler) > ", "run", [], 100, 500);
+    
+    await printLine("[*] Trying CVE-2024-HELL (Schrödinger's RCE)", true, 20);
+    await printLine("[*] Sending stage (304 bytes)...", true, 20);
+    for (let i = 0; i <= 100; i += 20) {
+      await updateLine(`\r[>] Payload injection: ${i}%`);
+      await sleep(100);
+    }
+    await updateLine("\r[>] Payload injection: 100% done.\n");
+    await sleep(400);
+    await printLine("[+] Meterpreter session 1 opened (10.0.0.42:4444 -> 10.0.0.42:54321)", true, 30);
+    await sleep(500);
+
+    // ========== METERPRETER ==========
+    await typeCommand("meterpreter > ", "sysinfo", [
+      "Computer    : HELL-CORE-01",
+      "OS          : Linux hell 5.15.0-hell",
+      "Arch        : x64",
+      "Meterpreter : x64/linux"
+    ], 100, 400);
+
+    await typeCommand("meterpreter > ", "cat /etc/hell_token", 
+      ["SCHRODINGER_714_ACCESS_GRANTED"], 100, 400);
+
+    await typeCommand("meterpreter > ", "download /var/db/hell_core.db", 
+      ["[*] Downloading: 1.37 MB ...", "[+] Saved to: /root/hell_core.db"], 100, 600);
+
+    await typeCommand("meterpreter > ", "flag", 
+      ["flag{th3_d3m0n_1s_1n_th3_m4ch1n3}"], 100, 500);
+
+    await typeCommand("meterpreter > ", "exit", 
+      ["[*] Session closed"], 100, 400);
+
+    await typeCommand("msf6 > ", "exit", [], 100, 400);
+
+    // ========== ФИНАЛ ==========
+    await printLine("", false);
+    await printLine("> hacking finished. type 'help' for commands.", true, 30);
+    await printLine("> you are now inside schrödinger's hell.", true, 25);
+
     terminalInput && terminalInput.focus();
+    demoRunning = false;
   }
+
+
   
   // Автоматический запуск демо через 2.5 секунды после загрузки страницы
   window.addEventListener('load', () => {
