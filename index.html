@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <canvas id="symbol-canvas" aria-hidden="true"></canvas>
   <div class="page-noise" aria-hidden="true"></div>
 
   <header class="topbar">
@@ -80,6 +81,17 @@
       </div>
 
       <div class="hero-terminal terminal-card">
+        <div class="hero-portrait-shell">
+          <div class="portrait-frame">
+            <img
+              class="hero-portrait"
+              src="assets/media/9373-helltaker-lucifer.png"
+              alt="Lucifer avatar"
+            />
+          </div>
+          <div class="portrait-badge">lucifer.exe</div>
+        </div>
+
         <div class="terminal-head">
           <div class="terminal-lights" aria-hidden="true">
             <span></span>
@@ -431,6 +443,11 @@
   <button id="terminal-toggle" class="terminal-toggle-btn" type="button">
     <span>$</span>
     <span>terminal</span>
+  </button>
+
+  <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-pressed="false">
+    <span>mode</span>
+    <span>hell</span>
   </button>
 
   <div id="terminal-window" class="terminal-window" aria-hidden="true">

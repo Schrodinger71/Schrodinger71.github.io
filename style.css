@@ -19,6 +19,20 @@
   --sans: "Segoe UI", "Trebuchet MS", system-ui, sans-serif;
 }
 
+body.theme-demonic {
+  --bg: #120605;
+  --bg-soft: #190907;
+  --panel: rgba(26, 10, 10, 0.84);
+  --panel-strong: rgba(34, 11, 11, 0.96);
+  --line: rgba(255, 93, 80, 0.2);
+  --line-strong: rgba(255, 108, 92, 0.42);
+  --text: #fff1ed;
+  --muted: #cda59b;
+  --accent: #ff6b57;
+  --accent-strong: #ff9a5f;
+  --accent-warm: #ffcf66;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -38,6 +52,13 @@ body {
     radial-gradient(circle at top right, rgba(111, 247, 176, 0.08), transparent 30%),
     linear-gradient(180deg, #081613 0%, #050b09 100%);
   overflow-x: hidden;
+}
+
+body.theme-demonic {
+  background:
+    radial-gradient(circle at top left, rgba(255, 92, 67, 0.18), transparent 30%),
+    radial-gradient(circle at top right, rgba(255, 169, 110, 0.08), transparent 26%),
+    linear-gradient(180deg, #140707 0%, #090303 100%);
 }
 
 body::before {
@@ -71,6 +92,16 @@ body::after {
   opacity: 0.08;
   pointer-events: none;
   z-index: -1;
+}
+
+#symbol-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.42;
 }
 
 a {
@@ -323,6 +354,54 @@ button {
   flex-direction: column;
   border-radius: var(--radius-lg);
   overflow: hidden;
+}
+
+.hero-portrait-shell {
+  position: relative;
+  padding: 22px 22px 0;
+}
+
+.portrait-frame {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.08), transparent 36%),
+    linear-gradient(180deg, rgba(53, 214, 255, 0.08), transparent 50%),
+    rgba(6, 16, 13, 0.9);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+body.theme-demonic .portrait-frame {
+  background:
+    radial-gradient(circle at top, rgba(255, 214, 170, 0.08), transparent 36%),
+    linear-gradient(180deg, rgba(255, 107, 87, 0.12), transparent 50%),
+    rgba(18, 7, 7, 0.92);
+}
+
+.hero-portrait {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  object-position: center top;
+  filter: saturate(1.08) contrast(1.05);
+}
+
+.portrait-badge {
+  position: absolute;
+  left: 38px;
+  bottom: 16px;
+  padding: 7px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgba(4, 12, 10, 0.78);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
 }
 
 .terminal-head {
@@ -609,6 +688,41 @@ button {
   cursor: pointer;
 }
 
+.theme-toggle-btn {
+  position: fixed;
+  right: 24px;
+  bottom: 84px;
+  z-index: 120;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 58px;
+  height: 58px;
+  border: 1px solid var(--line-strong);
+  border-radius: 18px;
+  background: rgba(7, 18, 15, 0.9);
+  color: var(--text);
+  box-shadow: var(--shadow);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  cursor: pointer;
+  transition: transform 0.22s ease, border-color 0.22s ease, background 0.22s ease;
+}
+
+.theme-toggle-btn:hover,
+.theme-toggle-btn:focus-visible {
+  transform: translateY(-2px);
+}
+
+.theme-toggle-btn[aria-pressed="true"] {
+  background: rgba(54, 14, 12, 0.95);
+  border-color: rgba(255, 107, 87, 0.48);
+}
+
 .terminal-window {
   position: fixed;
   right: 24px;
@@ -647,6 +761,10 @@ button {
   overflow-y: auto;
   font-family: var(--mono);
   color: var(--text);
+}
+
+.terminal-line.is-accent {
+  color: var(--accent);
 }
 
 .terminal-line {
@@ -818,6 +936,11 @@ button {
   .terminal-toggle-btn {
     right: 16px;
     bottom: 16px;
+  }
+
+  .theme-toggle-btn {
+    right: 16px;
+    bottom: 76px;
   }
 }
 

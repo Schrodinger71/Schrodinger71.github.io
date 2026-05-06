@@ -1,10 +1,14 @@
 const typingText = document.getElementById("typing-text");
+const body = document.body;
+const symbolCanvas = document.getElementById("symbol-canvas");
 const phrases = [
   "shipping backend tools with real-world purpose",
   "building bots, internal services and automations",
   "focused on security-aware engineering",
   "comfortable with Python, Go, C#, Docker and CI/CD"
 ];
+const themeStorageKey = "schrodinger71-theme";
+const symbolSet = ["$", "{ }", "</>", "01", "#", "!", "<>"];
 
 const projectDetails = {
   "git-sec-monitor": {
@@ -59,6 +63,7 @@ const terminalResponses = {
     "projects",
     "contact",
     "github",
+    "hack",
     "status",
     "clear",
     "date"
@@ -118,6 +123,103 @@ function typePhrase() {
   }
 
   setTimeout(typePhrase, isDeleting ? 38 : 64);
+}
+
+function initThemeToggle() {
+  const button = document.getElementById("theme-toggle");
+
+  if (!button) {
+    return;
+  }
+
+  const applyTheme = (mode) => {
+    const isDemonic = mode === "demonic";
+    body.classList.toggle("theme-demonic", isDemonic);
+    button.setAttribute("aria-pressed", String(isDemonic));
+  };
+
+  const saved = localStorage.getItem(themeStorageKey);
+  applyTheme(saved === "demonic" ? "demonic" : "default");
+
+  button.addEventListener("click", () => {
+    const nextMode = body.classList.contains("theme-demonic") ? "default" : "demonic";
+    localStorage.setItem(themeStorageKey, nextMode);
+    applyTheme(nextMode);
+  });
+}
+
+function initSymbolBackground() {
+  if (!symbolCanvas) {
+    return;
+  }
+
+  const context = symbolCanvas.getContext("2d");
+
+  if (!context) {
+    return;
+  }
+
+  const particles = [];
+  const mobile = window.innerWidth <= 768;
+  const particleCount = mobile ? 18 : 40;
+
+  const resize = () => {
+    symbolCanvas.width = window.innerWidth;
+    symbolCanvas.height = window.innerHeight;
+  };
+
+  class SymbolParticle {
+    constructor() {
+      this.reset();
+    }
+
+    reset() {
+      this.x = Math.random() * symbolCanvas.width;
+      this.y = Math.random() * symbolCanvas.height;
+      this.speedY = Math.random() * 0.55 + 0.15;
+      this.speedX = (Math.random() - 0.5) * 0.35;
+      this.size = Math.random() * 14 + 10;
+      this.opacity = Math.random() * 0.35 + 0.08;
+      this.symbol = symbolSet[Math.floor(Math.random() * symbolSet.length)];
+    }
+
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+
+      if (this.y > symbolCanvas.height + 30 || this.x < -60 || this.x > symbolCanvas.width + 60) {
+        this.reset();
+        this.y = -20;
+      }
+    }
+
+    draw() {
+      context.globalAlpha = this.opacity;
+      context.font = `${this.size}px Cascadia Code, Consolas, monospace`;
+      context.fillStyle = body.classList.contains("theme-demonic") ? "#ff7c64" : "#7ff7bd";
+      context.fillText(this.symbol, this.x, this.y);
+    }
+  }
+
+  const animate = () => {
+    context.clearRect(0, 0, symbolCanvas.width, symbolCanvas.height);
+
+    particles.forEach((particle) => {
+      particle.update();
+      particle.draw();
+    });
+
+    requestAnimationFrame(animate);
+  };
+
+  resize();
+
+  for (let index = 0; index < particleCount; index += 1) {
+    particles.push(new SymbolParticle());
+  }
+
+  window.addEventListener("resize", resize);
+  animate();
 }
 
 function initReveal() {
@@ -215,13 +317,20 @@ function initTerminal() {
     return;
   }
 
-  const print = (line) => {
+  let introPlayed = false;
+
+  const print = (line, className = "") => {
     const row = document.createElement("div");
     row.className = "terminal-line";
+    if (className) {
+      row.classList.add(className);
+    }
     row.textContent = line;
     output.appendChild(row);
     output.scrollTop = output.scrollHeight;
   };
+
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const setOpen = (open) => {
     windowEl.classList.toggle("open", open);
@@ -232,8 +341,43 @@ function initTerminal() {
     }
   };
 
+  const playIntro = async () => {
+    if (introPlayed) {
+      return;
+    }
+
+    introPlayed = true;
+    output.innerHTML = "";
+    setOpen(true);
+
+    const script = [
+      ["schrodinger71 terminal v2.1", "is-accent"],
+      ["boot sequence started..."],
+      ["loading profile://lucifer"],
+      ["establishing encrypted channel ... ok"],
+      ["guest@portfolio:$ nmap --top-ports 5 portfolio.local"],
+      ["22/tcp open ssh"],
+      ["80/tcp open http"],
+      ["443/tcp open https"],
+      ["guest@portfolio:$ exploit --demo --safe-mode"],
+      ["payload injected [##########] 100%", "is-accent"],
+      ["access granted: visual theatrics only"],
+      ["type `help` to continue"]
+    ];
+
+    for (const [line, className] of script) {
+      print(line, className);
+      await delay(line.includes("payload") ? 240 : 140);
+    }
+  };
+
   toggle.addEventListener("click", () => {
-    setOpen(!windowEl.classList.contains("open"));
+    const shouldOpen = !windowEl.classList.contains("open");
+    setOpen(shouldOpen);
+
+    if (shouldOpen && !introPlayed) {
+      playIntro();
+    }
   });
 
   close.addEventListener("click", () => setOpen(false));
@@ -272,6 +416,17 @@ function initTerminal() {
       return;
     }
 
+    if (command === "hack") {
+      [
+        "scanning attack surface...",
+        "bypassing firewall... demo only",
+        "root shell denied by design",
+        "style points awarded"
+      ].forEach((line, index) => print(line, index === 2 ? "is-accent" : ""));
+      input.value = "";
+      return;
+    }
+
     const response = terminalResponses[command];
 
     if (response) {
@@ -281,6 +436,12 @@ function initTerminal() {
     }
 
     input.value = "";
+  });
+
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      playIntro();
+    }, 1200);
   });
 }
 
@@ -346,6 +507,8 @@ document.addEventListener("DOMContentLoaded", () => {
     year.textContent = String(new Date().getFullYear());
   }
 
+  initThemeToggle();
+  initSymbolBackground();
   typePhrase();
   initReveal();
   initNav();
