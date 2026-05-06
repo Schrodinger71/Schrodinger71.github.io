@@ -3,289 +3,466 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>schrodinger71 • CEO Hell</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/media/helltakerlucifer-smile.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/media/helltakerlucifer-smile.png">
+  <title>schrodinger71 // portfolio</title>
+  <meta
+    name="description"
+    content="Портфолио schrodinger71: backend, security, DevOps, automation и прикладные проекты."
+  />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/media/helltakerlucifer-smile.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/media/helltakerlucifer-smile.png" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="page-noise" aria-hidden="true"></div>
 
-  <!-- Верхняя панель с меню (адаптивное) -->
-  <div class="top-panel">
-    <div class="menu-container">
-      <div class="menu-toggle" id="menuToggle">☰</div>
-      <div class="menu" id="mainMenu">
-        <div class="menu-item" data-dropdown="overview">
-          Обзор
-          <div class="dropdown" id="dropdown-overview">
-            <p>💢🖤 Schrödinger | Luci-fer 🖤👾</p>
-            <p>schrodinger71 • Fallen Angel • CEO Hell 👑</p>
-          </div>
+  <header class="topbar">
+    <a class="brand" href="#hero">
+      <span class="brand-mark">$</span>
+      <span>schrodinger71</span>
+    </a>
+
+    <button
+      class="nav-toggle"
+      id="nav-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-nav"
+      aria-label="Открыть меню"
+    >
+      menu
+    </button>
+
+    <nav class="nav" id="site-nav">
+      <a href="#about">Обо мне</a>
+      <a href="#tech">Технологии</a>
+      <a href="#projects">Проекты</a>
+      <a href="#contact">Контакты</a>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <section class="hero" id="hero" data-reveal>
+      <div class="hero-copy">
+        <p class="eyebrow">terminal portfolio / backend / security / automation</p>
+        <h1>
+          Делаю сервисы, ботов и инфраструктуру, где важны
+          надежность, понятная архитектура и скорость запуска.
+        </h1>
+        <p class="hero-text">
+          Меня зовут schrodinger71. Основной фокус: Python, Go, C#, DevOps,
+          инфраструктурная автоматизация, безопасность и прикладные проекты.
+        </p>
+
+        <div class="typing-shell" aria-live="polite">
+          <span class="shell-prefix">status</span>
+          <span id="typing-text"></span>
         </div>
-        <div class="menu-item" data-dropdown="repos">
-          Репозитории
-          <div class="dropdown" id="dropdown-repos">
-            <p>Мои реальные проекты</p>
-            <a href="#" onclick="showModal('git-sec-monitor')">git-sec-monitor</a>
-            <a href="#" onclick="showModal('university-schedule-bot')">university-schedule-bot</a>
-            <a href="#" onclick="showModal('KiberIncidentHub')">KiberIncidentHub</a>
-            <a href="#" onclick="showModal('FaceRecognitionProject')">FaceRecognitionProject</a>
-            <a href="#" onclick="showModal('devsecops-demo')">devsecops-demo</a>
-            <a href="#" onclick="showModal('Dev-bot')">Dev-bot</a>
-            <a href="#" onclick="showModal('prismia-bot')">prismia-bot</a>
-            <a href="#" onclick="showModal('AnagiriumBot')">AnagiriumBot</a>
-            <a href="#" onclick="showModal('config-demon')">config-demon</a>
-          </div>
+
+        <div class="hero-actions">
+          <a class="button button-primary" href="#projects">Смотреть проекты</a>
+          <a class="button button-secondary" href="https://github.com/Schrodinger71" target="_blank" rel="noreferrer">GitHub</a>
         </div>
-        <div class="menu-item" data-dropdown="tech">
-          Технологии
-          <div class="dropdown" id="dropdown-tech">
-            <p>C++ • C# • Python • Go • Docker • DevOps • Security</p>
+
+        <div class="hero-points">
+          <div class="point-card">
+            <span class="point-label">Стек</span>
+            <strong>Python, Go, C#, Docker, PostgreSQL</strong>
           </div>
-        </div>
-        <div class="menu-item" data-dropdown="activity">
-          Активность
-          <div class="dropdown" id="dropdown-activity">
-            <p>График вклада за последний год 🔥</p>
+          <div class="point-card">
+            <span class="point-label">Фокус</span>
+            <strong>Security, bots, APIs, CI/CD, automation</strong>
           </div>
-        </div>
-        <div class="menu-item" data-dropdown="contacts">
-          Контакты
-          <div class="dropdown" id="dropdown-contacts">
-            <p>Свяжись со мной в аду:</p>
-            <a href="https://t.me/schrodinger714" target="_blank">📱 Telegram</a>
-            <a href="https://github.com/Schrodinger71" target="_blank">🐈 GitHub</a>
-            <a href="#" onclick="discordCopy()">💬 Discord: schrodinger71</a>
+          <div class="point-card">
+            <span class="point-label">Локация</span>
+            <strong>Tula, Russia · UTC+3</strong>
           </div>
         </div>
       </div>
-    </div>
-  </div>
 
-  <button id="terminal-toggle" class="terminal-toggle-btn">
-    <span>$_</span> TERMINAL
-  </button>
-
-  <!-- Окно терминала -->
-  <div id="terminal-window" class="terminal-window">
-    <div class="terminal-header">
-      <span class="terminal-title">schrodinger@hell:~</span>
-      <button class="terminal-close">✕</button>
-    </div>
-    <div class="terminal-output" id="terminal-output">
-      <div class="terminal-line">Welcome to Schrödinger's Hell Terminal v1.0</div>
-      <div class="terminal-line">Type 'help' to see available commands.</div>
-      <div class="terminal-line">&nbsp;</div>
-    </div>
-    <div class="terminal-input-line">
-      <span class="prompt">schrodinger@hell:~$</span>
-      <input type="text" id="terminal-input" autofocus>
-    </div>
-  </div>
-
-  <div class="content">
-    <!-- HERO-БЛОК -->
-    <section class="hero">
-      <div class="hero-inner">
-        <div class="avatar-container">
-          <img src="assets/media/9373-helltaker-lucifer.png" class="avatar" id="avatar">
+      <div class="hero-terminal terminal-card">
+        <div class="terminal-head">
+          <div class="terminal-lights" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <span>portfolio://overview</span>
         </div>
-        <h1 class="glow-text">Schrödinger | Luci-fer</h1>
-        <div class="title">♨️ She's Luci ❖ Fallen Angel ❖ CEO Hell 👑</div>
-        <div class="typing" id="typing-text"></div>
-        
-        <p class="hero-description">
-          Midnight Coder (UTC+3) 🌙 • Technical Administrator 📡<br>
-          IT Security Specialist 🛡️ • Bot Architect &amp; Operator 🤖<br>
-          Docker Enthusiast 🐳 • DevOps Builder 🏗️ • Russia, Tula
-        </p>
 
-        <div class="hero-buttons">
-          <button onclick="triggerHellMode()" class="hell-mode-btn">🔥 АКТИВИРОВАТЬ АД (JS DEMO)</button>
-          <div id="status-badge" class="status-badge">
-            <span>👾 DEMONIC STATUS:</span> 
-            <span id="live-dot" class="live-dot"></span> 
-            ONLINE IN HELL
+        <div class="terminal-body">
+          <div class="terminal-row">
+            <span class="terminal-prompt">whoami</span>
+            <span>backend / security / devops engineer</span>
+          </div>
+          <div class="terminal-row">
+            <span class="terminal-prompt">focus</span>
+            <span>production-minded tools, bots, infra, security workflows</span>
+          </div>
+          <div class="terminal-row">
+            <span class="terminal-prompt">stack</span>
+            <span>python, go, c#, docker, linux, postgresql, github actions</span>
+          </div>
+          <div class="terminal-row">
+            <span class="terminal-prompt">status</span>
+            <span class="accent-line">open for interesting engineering tasks</span>
           </div>
         </div>
 
-        <div class="hero-stats" id="hero-stats">
-          Loading stats from hell...
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <span class="metric-label">Followers</span>
+            <strong id="metric-followers">--</strong>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Repos</span>
+            <strong id="metric-repos">--</strong>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Stars</span>
+            <strong id="metric-stars">--</strong>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Status</span>
+            <strong id="metric-status">online</strong>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- ОБО МНЕ -->
-    <div class="section">
-      <h2 class="section-title">Обо мне</h2>
-      <p class="about-text">
-        Я — Schrödinger. Полуночный кодер. Пишу на C++, C#, Python и Go.<br>
-        Создаю системы безопасности, ботов, DevOps-инфраструктуру и инструменты автоматизации.<br>
-        Всегда экспериментирую и делаю код, который <strong>оживает</strong>.
-      </p>
+    <section class="panel" id="about" data-reveal>
+      <div class="section-heading">
+        <p class="section-kicker">overview</p>
+        <h2>Направления</h2>
+        <p>
+          Ближе всего мне проекты на стыке разработки и эксплуатации: боты,
+          внутренние сервисы, инструменты для безопасности, DevOps-связки,
+          интеграции и автоматизация рутинных процессов.
+        </p>
+      </div>
+
+      <div class="focus-grid">
+        <article class="focus-card">
+          <span class="focus-index">01</span>
+          <h3>Backend и API</h3>
+          <p>
+            Пишу прикладные сервисы на Python и Go, проектирую понятные API,
+            продумываю структуру данных и сценарии поддержки.
+          </p>
+        </article>
+
+        <article class="focus-card">
+          <span class="focus-index">02</span>
+          <h3>Security и контроль</h3>
+          <p>
+            Интересны инструменты мониторинга, проверка уязвимостей, контроль
+            доступа и все, что делает систему безопаснее в реальной работе.
+          </p>
+        </article>
+
+        <article class="focus-card">
+          <span class="focus-index">03</span>
+          <h3>DevOps и автоматизация</h3>
+          <p>
+            Собираю окружения, контейнеризацию, CI/CD и вспомогательные утилиты,
+            чтобы проект можно было быстро поднять и не больно сопровождать.
+          </p>
+        </article>
+
+        <article class="focus-card">
+          <span class="focus-index">04</span>
+          <h3>Боты и интеграции</h3>
+          <p>
+            От Discord-ботов до внутренних сервисов с внешними API. Нравится
+            собирать инструменты, которые экономят время команде.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" id="tech" data-reveal>
+      <div class="section-heading">
+        <p class="section-kicker">stack</p>
+        <h2>Технологии и инструменты</h2>
+        <p>
+          Основной стек собран вокруг backend-разработки, контейнеризации,
+          системной автоматизации и работы с инфраструктурой.
+        </p>
+      </div>
+
+      <div class="stack-layout">
+        <article class="stack-card">
+          <h3>Языки</h3>
+          <div class="chip-group">
+            <span class="chip">Python</span>
+            <span class="chip">Go</span>
+            <span class="chip">C#</span>
+            <span class="chip">C++</span>
+            <span class="chip">SQL</span>
+            <span class="chip">Bash</span>
+          </div>
+        </article>
+
+        <article class="stack-card">
+          <h3>Infra</h3>
+          <div class="chip-group">
+            <span class="chip">Docker</span>
+            <span class="chip">Docker Compose</span>
+            <span class="chip">Linux</span>
+            <span class="chip">GitHub Actions</span>
+            <span class="chip">Portainer</span>
+            <span class="chip">Nginx</span>
+          </div>
+        </article>
+
+        <article class="stack-card">
+          <h3>Data</h3>
+          <div class="chip-group">
+            <span class="chip">PostgreSQL</span>
+            <span class="chip">SQLite</span>
+            <span class="chip">JSON</span>
+            <span class="chip">YAML</span>
+            <span class="chip">REST</span>
+          </div>
+        </article>
+
+        <article class="stack-card">
+          <h3>Tools</h3>
+          <div class="chip-group">
+            <span class="chip">Git</span>
+            <span class="chip">GitHub</span>
+            <span class="chip">VS Code</span>
+            <span class="chip">Rider</span>
+            <span class="chip">Discord API</span>
+            <span class="chip">Automation</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" id="projects" data-reveal>
+      <div class="section-heading">
+        <p class="section-kicker">projects</p>
+        <h2>Избранные проекты</h2>
+        <p>
+          Ниже собраны проекты, по которым проще всего понять мой реальный фокус:
+          security, автоматизация, боты, backend и прикладные инженерные задачи.
+        </p>
+      </div>
+
+      <div class="projects-grid">
+        <article class="project-card">
+          <p class="project-kind">Security / Python</p>
+          <h3>git-sec-monitor</h3>
+          <p class="project-description">
+            Инструмент для мониторинга безопасности Git-репозиториев и контроля
+            потенциально опасных изменений.
+          </p>
+          <div class="project-tags">
+            <span>Python</span>
+            <span>Security</span>
+            <span>Monitoring</span>
+          </div>
+          <div class="project-actions">
+            <button class="link-button" type="button" data-project="git-sec-monitor">Подробнее</button>
+            <a href="https://github.com/Schrodinger71/git-sec-monitor" target="_blank" rel="noreferrer">GitHub</a>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <p class="project-kind">Automation / Discord</p>
+          <h3>university-schedule-bot</h3>
+          <p class="project-description">
+            Бот для автоматизации расписания, уведомлений и повседневных
+            сценариев взаимодействия внутри сообщества.
+          </p>
+          <div class="project-tags">
+            <span>Python</span>
+            <span>Discord</span>
+            <span>Automation</span>
+          </div>
+          <div class="project-actions">
+            <button class="link-button" type="button" data-project="university-schedule-bot">Подробнее</button>
+            <a href="https://github.com/Schrodinger71/university-schedule-bot" target="_blank" rel="noreferrer">GitHub</a>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <p class="project-kind">Backend / Go</p>
+          <h3>go-product-api</h3>
+          <p class="project-description">
+            Легкий API-сервис для управления товарами, ориентированный на
+            понятную структуру и предсказуемое поведение.
+          </p>
+          <div class="project-tags">
+            <span>Go</span>
+            <span>API</span>
+            <span>Backend</span>
+          </div>
+          <div class="project-actions">
+            <button class="link-button" type="button" data-project="go-product-api">Подробнее</button>
+            <a href="https://github.com/Schrodinger71/go-product-api" target="_blank" rel="noreferrer">GitHub</a>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <p class="project-kind">DevSecOps / Demo</p>
+          <h3>devsecops-demo</h3>
+          <p class="project-description">
+            Демонстрационный проект, показывающий, как совместить разработку,
+            проверки безопасности и автоматизированный пайплайн.
+          </p>
+          <div class="project-tags">
+            <span>Python</span>
+            <span>DevSecOps</span>
+            <span>CI/CD</span>
+          </div>
+          <div class="project-actions">
+            <button class="link-button" type="button" data-project="devsecops-demo">Подробнее</button>
+            <a href="https://github.com/Schrodinger71/devsecops-demo" target="_blank" rel="noreferrer">GitHub</a>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <p class="project-kind">Incidents / Desktop</p>
+          <h3>KiberIncidentHub</h3>
+          <p class="project-description">
+            GUI-проект с базой данных для учета и анализа инцидентов, собранный
+            как прикладной инструмент под учебную задачу.
+          </p>
+          <div class="project-tags">
+            <span>Python</span>
+            <span>GUI</span>
+            <span>Database</span>
+          </div>
+          <div class="project-actions">
+            <button class="link-button" type="button" data-project="KiberIncidentHub">Подробнее</button>
+            <a href="https://github.com/Schrodinger71/KiberIncidentHub" target="_blank" rel="noreferrer">GitHub</a>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <p class="project-kind">Bots / Community</p>
+          <h3>Prismia-bot(DEMO)</h3>
+          <p class="project-description">
+            Многофункциональный Discord-бот с интеграциями, HTTP-логикой и
+            сценариями для управления игровым сообществом. Полная версия в приватных репозиториях.
+          </p>
+          <div class="project-tags">
+            <span>Python</span>
+            <span>Discord API</span>
+            <span>HTTP</span>
+          </div>
+          <div class="project-actions">
+            <button class="link-button" type="button" data-project="prismia-bot">Подробнее</button>
+            <a href="https://github.com/Schrodinger71/prismia-bot" target="_blank" rel="noreferrer">GitHub</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel split-panel" data-reveal>
+      <div class="section-heading">
+        <p class="section-kicker">workflow</p>
+        <h2>Как я подхожу к задачам</h2>
+        <p>
+          Мне интересны проекты, где важны не только строки кода, но и то,
+          насколько решение удобно запускать, сопровождать и развивать дальше.
+        </p>
+      </div>
+
+      <div class="two-column">
+        <article class="info-card">
+          <h3>Подход к работе</h3>
+          <ul class="clean-list">
+            <li>Сначала собираю понятную структуру и убираю лишнюю сложность.</li>
+            <li>Думаю о deploy, логировании и обслуживании еще до финала разработки.</li>
+            <li>Стараюсь, чтобы решение было воспроизводимым и не ломалось от мелочей.</li>
+            <li>Люблю, когда проект можно быстро объяснить другому человеку.</li>
+          </ul>
+        </article>
+
+        <article class="info-card">
+          <h3>Что интересно сейчас</h3>
+          <ul class="clean-list">
+            <li>security tooling и анализ уязвимостей;</li>
+            <li>боты и сервисы для сообществ;</li>
+            <li>внутренние панели и backend-инструменты;</li>
+            <li>контейнеризация, CI/CD и инженерная автоматизация.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" id="contact" data-reveal>
+      <div class="section-heading">
+        <p class="section-kicker">contact</p>
+        <h2>Связаться со мной</h2>
+        <p>
+          Если нужен разработчик под backend, automation, ботов или проект с
+          инженерным уклоном, проще всего написать в Telegram или GitHub.
+        </p>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-shell">
+          <div class="terminal-head">
+            <div class="terminal-lights" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <span>contacts://open</span>
+          </div>
+
+          <div class="contact-list">
+            <a href="https://t.me/schrodinger714" target="_blank" rel="noreferrer">Telegram</a>
+            <a href="https://github.com/Schrodinger71" target="_blank" rel="noreferrer">GitHub</a>
+            <button id="copy-discord" class="link-button discord-button" type="button">Discord: schrodinger71</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; <span id="year"></span> schrodinger71. Portfolio about projects, engineering and technology.</p>
+  </footer>
+
+  <button id="terminal-toggle" class="terminal-toggle-btn" type="button">
+    <span>$</span>
+    <span>terminal</span>
+  </button>
+
+  <div id="terminal-window" class="terminal-window" aria-hidden="true">
+    <div class="terminal-head">
+      <div class="terminal-lights" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <span>schrodinger71@portfolio</span>
+      <button class="terminal-close" id="terminal-close" type="button" aria-label="Закрыть терминал">close</button>
     </div>
 
-    <!-- GITHUB СТАТИСТИКА -->
-    <div class="section">
-      <h2 class="section-title">GitHub Stats</h2>
-      <div class="stats-container">
-        <img class="stats-img" src="https://github-readme-stats-sigma-five.vercel.app/api/top-langs/?username=Schrodinger71&amp;theme=dracula&amp;layout=compact&amp;hide_border=true&amp;bg_color=00000000" alt="Top Languages">
-        <img class="stats-img" src="https://github-readme-stats-sigma-five.vercel.app/api?username=schrodinger71&amp;count_private=true&amp;show_icons=true&amp;theme=dracula&amp;hide_border=true&amp;bg_color=00000000" alt="GitHub Stats">
-      </div>
+    <div class="terminal-output" id="terminal-output">
+      <div class="terminal-line">schrodinger71 terminal ready</div>
+      <div class="terminal-line">type `help` to see commands</div>
     </div>
 
-    <!-- ТЕХНОЛОГИИ -->
-    <div class="section">
-      <h2 class="section-title">Технологии &amp; Инструменты</h2>
-      <div class="tech-grid" id="tech-grid">
-        <!-- все бейджи -->
-        <img class="tech-badge" src="https://img.shields.io/badge/C++-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white" alt="C++">
-        <img class="tech-badge" src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white" alt="C#">
-        <img class="tech-badge" src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
-        <img class="tech-badge" src="https://img.shields.io/badge/Go-3776AB?style=for-the-badge&logo=go&logoColor=white" alt="Go">
-        <img class="tech-badge" src="https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white" alt=".NET">
-        <img class="tech-badge" src="https://img.shields.io/badge/VS_Code-007ACC?style=for-the-badge&logo=visual-studio-code&logoColor=white" alt="VS Code">
-        <img class="tech-badge" src="https://img.shields.io/badge/Rider-CB161E?style=for-the-badge&logo=rider&logoColor=white" alt="Rider">
-        <img class="tech-badge" src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL">
-        <img class="tech-badge" src="https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite">
-        <img class="tech-badge" src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker">
-        <img class="tech-badge" src="https://img.shields.io/badge/Docker_Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Compose">
-        <img class="tech-badge" src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white" alt="GitHub Actions">
-        <img class="tech-badge" src="https://img.shields.io/badge/Portainer.io-2010FF?style=for-the-badge&logo=portainer&logoColor=white" alt="Portainer">
-        <img class="tech-badge" src="https://img.shields.io/badge/Discord_API-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord API">
-        <img class="tech-badge" src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white" alt="Git">
-        <img class="tech-badge" src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
-        <img class="tech-badge" src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black" alt="Linux">
-        <img class="tech-badge" src="https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white" alt="Ubuntu">
-        <img class="tech-badge" src="https://img.shields.io/badge/Kali_Linux-557C94?style=for-the-badge&logo=kalilinux&logoColor=white" alt="Kali Linux">
-        <img class="tech-badge" src="https://img.shields.io/badge/Windows_10-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Windows">
-        <img class="tech-badge" src="https://img.shields.io/badge/JSON-000000?style=for-the-badge&logo=json&logoColor=white" alt="JSON">
-        <img class="tech-badge" src="https://img.shields.io/badge/YAML-CB171E?style=for-the-badge&logo=yaml&logoColor=white" alt="YAML">
-      </div>
-    </div>
-
-    <!-- ПРОЕКТЫ (ПИННЕД РЕПО) -->
-    <div class="section">
-      <h2 class="section-title">Пиннед проекты</h2>
-      <div class="projects-grid" id="projects-grid">
-        <!-- 12 карточек как в оригинале -->
-        <div class="repo-card" onclick="showModal('git-sec-monitor')">
-          <div class="repo-name">🔥 git-sec-monitor</div>
-          <div class="repo-desc">Мониторинг безопасности Git-репозиториев. Написан на Python.</div>
-          <div class="repo-lang">🐍 Python • Security</div>
-        </div>
-        <div class="repo-card" onclick="showModal('university-schedule-bot')">
-          <div class="repo-name">📅 university-schedule-bot</div>
-          <div class="repo-desc">Discord-бот для расписания университета. Автоматизация и уведомления.</div>
-          <div class="repo-lang">🐍 Python • Bot Architect</div>
-        </div>
-        <div class="repo-card" onclick="showModal('go-product-api')">
-          <div class="repo-name">🌀 go-product-api</div>
-          <div class="repo-desc">API-сервис управления товарами. Высокопроизводительный Go-бэкенд.</div>
-          <div class="repo-lang">🐹 Go • DevOps</div>
-        </div>
-        <div class="repo-card" onclick="showModal('KiberIncidentHub')">
-          <div class="repo-name">💻 KiberIncidentHub</div>
-          <div class="repo-desc">GUI + БД проект для курсовой работы. Управление и анализ инцидентов.</div>
-          <div class="repo-lang">🐍 Python • GUI/DB</div>
-        </div>
-        <div class="repo-card" onclick="showModal('FaceRecognitionProject')">
-          <div class="repo-name">🧠 FaceRecognitionProject</div>
-          <div class="repo-desc">Проект по методам ИИ для распознавания лиц. Курсовая работа.</div>
-          <div class="repo-lang">🐍 Python • AI</div>
-        </div>
-        <div class="repo-card" onclick="showModal('devsecops-demo')">
-          <div class="repo-name">🔒 devsecops-demo</div>
-          <div class="repo-desc">Демонстрация DevSecOps процессов: анализ уязвимостей и защита систем.</div>
-          <div class="repo-lang">🐍 Python • DevSecOps</div>
-        </div>
-        <div class="repo-card" onclick="showModal('Dev-bot')">
-          <div class="repo-name">🤖 Dev-bot</div>
-          <div class="repo-desc">Discord-бот Adventure Time SS14. Логирование, автоматизация и управление сервером.</div>
-          <div class="repo-lang">🐍 Python • Discord Bot</div>
-        </div>
-        <div class="repo-card" onclick="showModal('prismia-bot')">
-          <div class="repo-name">🌸 Prismia-bot</div>
-          <div class="repo-desc">Многофункциональный Discord-бот для Paradox SS14 с привязкой аккаунтов и HTTP-сервером.</div>
-          <div class="repo-lang">🐍 Python • Discord Bot</div>
-        </div>
-        <div class="repo-card" onclick="showModal('AnagiriumBot')">
-          <div class="repo-name">💬 AnagiriumBot</div>
-          <div class="repo-desc">Кастомный Discord-бот для проекта Delta RP: управление голосовыми каналами и интеграция с GitHub.</div>
-          <div class="repo-lang">🐍 Python • Discord Bot</div>
-        </div>
-        <div class="repo-card" onclick="showModal('config-demon')">
-          <div class="repo-name">⚡ config-demon</div>
-          <div class="repo-desc">Утилита для автоматической очистки реплеев и обновления билдов Paradox SS14.</div>
-          <div class="repo-lang">🐍 Python • Dev Tool</div>
-        </div>
-        <div class="repo-card" onclick="showModal('space_station_ADT')">
-          <div class="repo-name">🎰 Minesweeper Arcade</div>
-          <div class="repo-desc">Крупный проект для AdventureTime SS14: аркадный автомат "Сапёр" внутри SS14 с UI, счетчиком мин и логикой игры.</div>
-          <div class="repo-lang">🦈 C# • Game / SS14</div>
-        </div>
-        <div class="repo-card" onclick="showModal('discord-auth-system')">
-          <div class="repo-name">🔑 Discord Auth System SS14</div>
-          <div class="repo-desc">Собственная система обязательной авторизации через Discord для игровых серверов. Генерация кодов, привязка аккаунтов и проверка доступа.</div>
-          <div class="repo-lang">🦈 C# • Server / Discord / SS14</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- НАВЫКИ (АДСКИЙ СТЕК) -->
-    <div class="section">
-      <h2 class="section-title">Адский стек навыков</h2>
-      <div class="skills">
-        <div>
-          <div class="skill-name"><span>Python</span><span>98%</span></div>
-          <div class="bar-bg"><div class="bar-fill" data-width="98"></div></div>
-        </div>
-        <div>
-          <div class="skill-name"><span>C++ / C#</span><span>94%</span></div>
-          <div class="bar-bg"><div class="bar-fill" data-width="94"></div></div>
-        </div>
-        <div>
-          <div class="skill-name"><span>Go + DevOps</span><span>92%</span></div>
-          <div class="bar-bg"><div class="bar-fill" data-width="92"></div></div>
-        </div>
-        <div>
-          <div class="skill-name"><span>Docker &amp; Security</span><span>95%</span></div>
-          <div class="bar-bg"><div class="bar-fill" data-width="95"></div></div>
-        </div>
-        <div>
-          <div class="skill-name"><span>Bot Architecture</span><span>97%</span></div>
-          <div class="bar-bg"><div class="bar-fill" data-width="97"></div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ГРАФИК АКТИВНОСТИ -->
-    <div class="section">
-      <h2 class="section-title">Активность • Последний год</h2>
-      <div class="contrib-graph">
-        <img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=schrodinger71&theme=github_dark" 
-             class="contrib-img" alt="GitHub contribution graph">
-        <p class="contrib-note">📊 Данные напрямую с GitHub • Коммиты, PR, ревью</p>
-      </div>
-    </div>
+    <label class="terminal-input-line" for="terminal-input">
+      <span class="terminal-prompt">guest@portfolio:$</span>
+      <input id="terminal-input" type="text" autocomplete="off" spellcheck="false" />
+    </label>
   </div>
 
-  <!-- МОДАЛЬНОЕ ОКНО -->
-  <div id="modal" onclick="if(event.target.id === 'modal') hideModal()" class="modal">
-    <div class="modal-content">
-      <h2 id="modal-title" class="modal-title"></h2>
-      <div id="modal-body" class="modal-body"></div>
-      <button onclick="hideModal()" class="modal-close-btn">ЗАКРЫТЬ ВРАТА АДА</button>
+  <div class="modal" id="project-modal" aria-hidden="true">
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal-close" id="modal-close" type="button" aria-label="Закрыть окно">close</button>
+      <p class="modal-kicker">project details</p>
+      <h2 id="modal-title"></h2>
+      <div id="modal-content" class="modal-content"></div>
     </div>
   </div>
-
-  <!-- ПОДВАЛ -->
-  <div class="footer">
-    <p>© schrodinger71 • Built with pure Hell &amp; beautiful JS • 2026</p>
-    <p class="footer-note">🔥 Теперь ещё больше анимаций: сканирующая линия, мерцающий огонь, всплывающие бейджи, лавовые прогресс-бары, rise-from-hell, Hell Mode с тряской и многое другое!</p>
-  </div>
-
-  <canvas id="hell-canvas"></canvas>
 
   <script src="script.js"></script>
 </body>
