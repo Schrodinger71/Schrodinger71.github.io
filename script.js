@@ -8,7 +8,7 @@ const phrases = [
   "comfortable with Python, Go, C#, Docker and CI/CD"
 ];
 const themeStorageKey = "schrodinger71-theme";
-const symbolSet = ["$", "{ }", "</>", "01", "#", "!", "<>"];
+const symbolSet = ["$", "{ }", "</>", "01", "#", "!", "<>", "0x", "[ ]", ">>"];
 
 const projectDetails = {
   "git-sec-monitor": {
@@ -161,7 +161,7 @@ function initSymbolBackground() {
 
   const particles = [];
   const mobile = window.innerWidth <= 768;
-  const particleCount = mobile ? 18 : 40;
+  const particleCount = mobile ? 26 : 58;
 
   const resize = () => {
     symbolCanvas.width = window.innerWidth;
@@ -176,10 +176,11 @@ function initSymbolBackground() {
     reset() {
       this.x = Math.random() * symbolCanvas.width;
       this.y = Math.random() * symbolCanvas.height;
-      this.speedY = Math.random() * 0.55 + 0.15;
-      this.speedX = (Math.random() - 0.5) * 0.35;
-      this.size = Math.random() * 14 + 10;
-      this.opacity = Math.random() * 0.35 + 0.08;
+      this.speedY = Math.random() * 0.6 + 0.18;
+      this.speedX = (Math.random() - 0.5) * 0.45;
+      this.size = Math.random() * 16 + 14;
+      this.opacity = Math.random() * 0.35 + 0.22;
+      this.glow = Math.random() * 14 + 10;
       this.symbol = symbolSet[Math.floor(Math.random() * symbolSet.length)];
     }
 
@@ -196,8 +197,13 @@ function initSymbolBackground() {
     draw() {
       context.globalAlpha = this.opacity;
       context.font = `${this.size}px Cascadia Code, Consolas, monospace`;
-      context.fillStyle = body.classList.contains("theme-demonic") ? "#ff7c64" : "#7ff7bd";
+      context.fillStyle = body.classList.contains("theme-demonic") ? "#ff8a72" : "#98ffd0";
+      context.shadowBlur = this.glow;
+      context.shadowColor = body.classList.contains("theme-demonic")
+        ? "rgba(255, 90, 70, 0.75)"
+        : "rgba(111, 247, 176, 0.65)";
       context.fillText(this.symbol, this.x, this.y);
+      context.shadowBlur = 0;
     }
   }
 
