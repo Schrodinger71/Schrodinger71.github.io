@@ -336,6 +336,23 @@ function initTerminal() {
     output.scrollTop = output.scrollHeight;
   };
 
+  const printTyped = async (line, className = "", speed = 28) => {
+    const row = document.createElement("div");
+    row.className = "terminal-line";
+    if (className) {
+      row.classList.add(className);
+    }
+
+    output.appendChild(row);
+    output.scrollTop = output.scrollHeight;
+
+    for (const char of line) {
+      row.textContent += char;
+      output.scrollTop = output.scrollHeight;
+      await delay(speed);
+    }
+  };
+
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const setOpen = (open) => {
@@ -355,26 +372,43 @@ function initTerminal() {
     introPlayed = true;
     output.innerHTML = "";
     setOpen(true);
+    await delay(260);
+    await printTyped("schrodinger71 terminal v2.1", "is-accent", 34);
+    await delay(420);
+    await printTyped("boot sequence started...", "", 26);
+    await delay(500);
+    await printTyped("loading profile://lucifer", "", 24);
+    await delay(420);
+    await printTyped("establishing encrypted channel ... ok", "", 22);
+    await delay(650);
+    await printTyped("root@schrodinger-box:$ nmap --top-ports 5 portfolio.local", "", 18);
+    await delay(520);
 
-    const script = [
-      ["schrodinger71 terminal v2.1", "is-accent"],
-      ["boot sequence started..."],
-      ["loading profile://lucifer"],
-      ["establishing encrypted channel ... ok"],
-      ["guest@portfolio:$ nmap --top-ports 5 portfolio.local"],
-      ["22/tcp open ssh"],
-      ["80/tcp open http"],
-      ["443/tcp open https"],
-      ["guest@portfolio:$ exploit --demo --safe-mode"],
-      ["payload injected [##########] 100%", "is-accent"],
-      ["access granted: visual theatrics only"],
-      ["type `help` to continue"]
-    ];
-
-    for (const [line, className] of script) {
-      print(line, className);
-      await delay(line.includes("payload") ? 240 : 140);
+    for (const line of ["22/tcp open ssh", "80/tcp open http", "443/tcp open https"]) {
+      await printTyped(line, "", 20);
+      await delay(340);
     }
+
+    await delay(480);
+    await printTyped("root@schrodinger-box:$ exploit --demo --safe-mode", "", 18);
+    await delay(700);
+
+    const progressLine = document.createElement("div");
+    progressLine.className = "terminal-line is-accent";
+    output.appendChild(progressLine);
+
+    for (let step = 0; step <= 10; step += 1) {
+      const filled = "#".repeat(step);
+      const empty = ".".repeat(10 - step);
+      progressLine.textContent = `payload injected [${filled}${empty}] ${step * 10}%`;
+      output.scrollTop = output.scrollHeight;
+      await delay(step === 0 ? 420 : 280);
+    }
+
+    await delay(520);
+    await printTyped("access granted: visual theatrics only", "", 24);
+    await delay(420);
+    await printTyped("type `help` to continue", "", 24);
   };
 
   toggle.addEventListener("click", () => {
@@ -394,7 +428,7 @@ function initTerminal() {
     }
 
     const value = input.value.trim();
-    print(`guest@portfolio:$ ${value}`);
+    print(`root@schrodinger-box:$ ${value}`);
 
     if (!value) {
       input.value = "";
